@@ -1,13 +1,22 @@
 import 'dart:io';
 
+import 'package:b/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    title: "Gratato",
-    home: LandingScreen(),
-  ));
+  runApp(
+    ScreenUtilInit(
+      designSize: const Size(414, 896),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child){
+        return MaterialApp(home: Login());
+      },
+    ),
+  );
 }
 
 class LandingScreen extends StatefulWidget {
@@ -23,7 +32,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   openGallery(BuildContext context) async {
     var picture = await ImagePicker().pickImage(source: ImageSource.gallery);
-    this.setState(() {
+    setState(() {
       imageFile = File(picture!.path);
     });
     Navigator.of(context).pop();
@@ -31,7 +40,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   openCamera(BuildContext context) async {
     var picture = await ImagePicker().pickImage(source: ImageSource.camera);
-    this.setState(() {
+    setState(() {
       imageFile = File(picture!.path);
     });
     Navigator.of(context).pop();
@@ -80,8 +89,6 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugShowCheckedModeBanner:
-    false;
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -104,26 +111,24 @@ class _LandingScreenState extends State<LandingScreen> {
         elevation: 0.00,
         backgroundColor: Color.fromARGB(255, 12, 245, 124),
       ),
-      body: Container(
-          child: Center(
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            decideImageView(),
-            ElevatedButton(
-              onPressed: () {
-                showChoiceDialog(context);
-                style:
-                ElevatedButton.styleFrom(backgroundColor: Colors.green);
-              },
-              child: Text(
-                "Select leaf image",
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-          ],
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        decideImageView(),
+        ElevatedButton(
+          onPressed: () {
+            showChoiceDialog(context);
+            ElevatedButton.styleFrom(backgroundColor: Colors.green);
+          },
+          child: Text(
+            "Select leaf image",
+            style: TextStyle(fontSize: 25),
+          ),
         ),
-      )),
+      ],
+        ),
+      ),
     );
   }
 }
