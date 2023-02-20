@@ -1,3 +1,4 @@
+import 'package:b/main.dart';
 import 'package:b/underlined_input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,12 @@ class Login extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Button(
-                              onPressed: () async {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const LandingScreen()),
+                                );
+                              },
                               text: "Log In"),
                         ),
                         SizedBox(
