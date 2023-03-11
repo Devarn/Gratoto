@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MaterialApp(
-    title: "Gratato",
+    title: "Gratoto",
     home: LandingScreen(),
   ));
 }
@@ -23,18 +23,19 @@ class _LandingScreenState extends State<LandingScreen> {
 
   openGallery(BuildContext context) async {
     var picture = await ImagePicker().pickImage(source: ImageSource.gallery);
-    this.setState(() {
+    setState(() {
       imageFile = File(picture!.path);
     });
-    Navigator.of(context).pop();
+    Navigator.pop(context);
+
   }
 
   openCamera(BuildContext context) async {
     var picture = await ImagePicker().pickImage(source: ImageSource.camera);
-    this.setState(() {
+    setState(() {
       imageFile = File(picture!.path);
     });
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
 
   Future uploadImage() async {
@@ -56,19 +57,19 @@ class _LandingScreenState extends State<LandingScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Text("Choose one of the options"),
+              title: const Text("Choose one of the options"),
               content: SingleChildScrollView(
                   child: ListBody(
                 children: <Widget>[
                   GestureDetector(
-                    child: Text("Gallery"),
+                    child: const Text("Gallery"),
                     onTap: () {
                       openGallery(context);
                     },
                   ),
-                  Padding(padding: EdgeInsets.all(9.0)),
+                  const Padding(padding: EdgeInsets.all(9.0)),
                   GestureDetector(
-                    child: Text("Camera"),
+                    child: const Text("Camera"),
                     onTap: () {
                       openCamera(context);
                     },
@@ -103,7 +104,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ],
         shadowColor: Colors.lightGreen,
         title: const Text(
-          "Gratato",
+          "Gratoto",
           style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
         ),
         titleSpacing: 00.0,
@@ -116,35 +117,34 @@ class _LandingScreenState extends State<LandingScreen> {
               bottomLeft: Radius.circular(25)),
         ),
         elevation: 0.00,
-        backgroundColor: Color.fromARGB(255, 12, 245, 124),
+        backgroundColor: const Color.fromARGB(255, 12, 245, 124),
       ),
-      body: Container(
-          child: Center(
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            decideImageView(),
-            ElevatedButton(
-              onPressed: () {
-                showChoiceDialog(context);
-                style:
-                ElevatedButton.styleFrom(backgroundColor: Colors.green);
-              },
-              child: Text(
-                "Select leaf image",
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                uploadImage();
-                // Handle button press
-              },
-              child: Text('Upload image'),
-            )
-          ],
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        decideImageView(),
+        ElevatedButton(
+          onPressed: () {
+            showChoiceDialog(context);
+          },
+          style:
+          ElevatedButton.styleFrom(backgroundColor: Colors.green,padding: const EdgeInsetsDirectional.symmetric(horizontal: 20,vertical: 20)),
+          child: const Text(
+            "Select leaf image",
+            style: TextStyle(fontSize: 25),
+          ),
         ),
-      )),
+        ElevatedButton(
+          onPressed: () {
+            uploadImage();
+            // Handle button press
+          },
+          child: const Text('Upload image'),
+        )
+      ],
+        ),
+      ),
     );
   }
 }
