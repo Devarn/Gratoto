@@ -57,4 +57,4 @@ def predict(request):
     predictions = class_names[np.argmax(predictions[0])]
     confidence = round(100 * (np.max(predictions[0])), 2)
 
-    return {"class": predicted_class, "confidence": confidence}
+    return {"class": predictions, "confidence": confidence}
