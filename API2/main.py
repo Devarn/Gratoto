@@ -5,6 +5,7 @@ from io import BytesIO
 from PIL import Image
 import tensorflow as tf
 import keras
+from keras.models import save_model
 
 app = FastAPI()
 
