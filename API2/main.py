@@ -9,10 +9,9 @@ from keras.models import save_model
 
 app = FastAPI()
 
-
-MODEL=tf.keras.models.load_model("../model", compile=False)
+MODEL = tf.keras.models.load_model("../model", compile=False)
 MODEL.compile
-CLASS_NAMES=["Early Blight", "Late Blight", "Healthy"]
+CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
 
 def read_file_as_image(data) -> np.ndarray:
@@ -32,13 +31,12 @@ async def predict(
     img_bytes = read_file_as_image(await file.read())
     img_batch = np.expand_dims(img_bytes, 0)
     predictions = MODEL.predict(img_batch)
-    predicted_class= CLASS_NAMES[np.argmax(predictions[0])]
-    conifdence =np.max(predictions[0])
+    predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
+    conifdence = np.max(predictions[0])
     return {
-        'class':predicted_class,
-        'confidecne':float(conifdence)
+        'class': predicted_class,
+        'confidecne': float(conifdence)
     }
-
 
 
 if __name__ == "__main__":
