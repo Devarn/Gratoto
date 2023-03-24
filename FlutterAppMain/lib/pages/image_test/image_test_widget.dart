@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +22,8 @@ class ImageTestWidget extends StatefulWidget {
 
 class _ImageTestWidgetState extends State<ImageTestWidget> {
   late ImageTestModel _model;
+  late String diseaseName;
+  late String confidence;
   File? imageFile;
   final ImagePicker imagePicker = ImagePicker();
 
@@ -41,6 +44,26 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     super.dispose();
   }
 
+  void imageUploadFail() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Image upload has failed"),
+          content: Text("Please try uploading again"),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<bool> uploadImage() async {
     final uri = Uri.parse(
         "https://us-central1-gratato-381114.cloudfunctions.net/predict");
@@ -53,27 +76,32 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
       var response = await request.send();
       if (response.statusCode == 200) {
         String responseString = await response.stream.bytesToString();
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Text values received"),
-              content: Text(responseString),
-              actions: [
-                TextButton(
-                  child: Text("OK"),
-                  onPressed: () {
-                    // Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        //showDialog(
+        //    context: context,
+        //   builder: (BuildContext context) {
+        //      return AlertDialog(
+        //        title: Text("Text values received"),
+        //       content: Text(responseString),
+        //        actions: [
+        //         TextButton(
+        //           child: Text("OK"),
+        //           onPressed: () {
+        //              // Navigator.of(context).pop();
+        //            },
+        //         ),
+        //      ],
+        //      );
+        //     },
+        //    );
         print('Image uploaded successfully');
+        String val = responseString;
+        List user = val.split(',');
+        diseaseName = (user[0]).toString();
+        confidence = (user[1]).toString();
         uploaded = true;
       } else {
         uploaded = false;
+        imageUploadFail();
         print('Image upload failed with status code ${response.statusCode}');
       }
     } catch (e) {
@@ -118,7 +146,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => LoadingPagWidget(),
+                                  builder: (context) =>
+                                      LoadingPagWidget(diseaseName),
                                 ),
                               );
                             }
@@ -162,12 +191,13 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                                 });
                                 uploadImage();
                                 if (await uploadImage()) {
-                                  // await Navigator.push(
-                                  //    context,
-                                  //    MaterialPageRoute(
-                                  //      builder: (context) => LoadingPagWidget(),
-                                  //    ),
-                                  //  );
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          LoadingPagWidget(diseaseName),
+                                    ),
+                                  );
                                 }
                               },
                               child: Icon(

@@ -8,7 +8,9 @@ import 'result_page_model.dart';
 export 'result_page_model.dart';
 
 class ResultPageWidget extends StatefulWidget {
-  const ResultPageWidget({Key? key}) : super(key: key);
+  final String diseaseName;
+  final String confidence = "";
+  ResultPageWidget(this.diseaseName, {Key? key}) : super(key: key);
 
   @override
   _ResultPageWidgetState createState() => _ResultPageWidgetState();
@@ -110,7 +112,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
                       child: Text(
-                        'Name : Tomato Late Blight',
+                        widget.diseaseName,
                         style: FlutterFlowTheme.of(context).subtitle1.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,
