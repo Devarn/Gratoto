@@ -35,7 +35,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'tutorial',debugShowCheckedModeBanner: false,
+      title: 'Gratato',
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,

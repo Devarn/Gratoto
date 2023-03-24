@@ -29,7 +29,7 @@ class _SplashWidgetState extends State<SplashWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(milliseconds: 3000));
+      await Future.delayed(const Duration(milliseconds: 1000));
       await Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

@@ -1,11 +1,13 @@
-import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
-import '/pages/loading_pag/loading_pag_widget.dart';
+//import '/pages/loading_pag/loading_pag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'image_test_model.dart';
 export 'image_test_model.dart';
@@ -18,6 +20,8 @@ class ImageTestWidget extends StatefulWidget {
 }
 
 class _ImageTestWidgetState extends State<ImageTestWidget> {
+  File? imageFile;
+  final ImagePicker imagePicker = ImagePicker();
   late ImageTestModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -35,6 +39,47 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
 
     _unfocusNode.dispose();
     super.dispose();
+  }
+
+  Future<bool> uploadImage() async {
+    final uri = Uri.parse(
+        "https://us-central1-gratato-381114.cloudfunctions.net/predictt");
+    var request = http.MultipartRequest('POST', uri);
+    bool uploaded = false;
+    request.headers['Content-Type'] = 'multipart/form-data';
+    request.files
+        .add(await http.MultipartFile.fromPath('file', imageFile!.path));
+    try {
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        String responseString = await response.stream.bytesToString();
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Text values received"),
+              content: Text(responseString),
+              actions: [
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    // Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        print('Image uploaded successfully');
+        uploaded = true;
+      } else {
+        uploaded = false;
+        print('Image upload failed with status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+    return Future.value(uploaded);
   }
 
   @override
@@ -62,22 +107,21 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            50.0, 0.0, 0.0, 20),
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(50.0, 0.0, 0.0, 20),
                         child: InkWell(
-                          onTap: () async {
-                            final imagePicker = ImagePicker();
-                            XFile? pickedImage = await imagePicker.pickImage(source: ImageSource.camera);
-                            if(pickedImage != null){
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      LoadingPagWidget(),
-                                ),
-                              );
-                            }
-                          },
+                          //onTap: () async {
+                          //     XFile? pickedImage = await imagePicker.pickImage(
+                          //        source: ImageSource.camera);
+                          //    if (pickedImage != null) {
+                          //       await Navigator.push(
+                          //        context,
+                          //         MaterialPageRoute(
+                          //          builder: (context) => LoadingPagWidget(),
+                          //      ),
+                          //        );
+                          //     }
+                          //    },
                           child: Container(
                             width: 110.0,
                             height: 100.0,
@@ -110,17 +154,20 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             alignment: AlignmentDirectional(0.05, -0.25),
                             child: InkWell(
                               onTap: () async {
-                                final imagePicker = ImagePicker();
-                                XFile? pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
-                                if(pickedImage != null){
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          LoadingPagWidget(),
-                                    ),
-                                  );
-                                }
+                                var picture = await ImagePicker()
+                                    .pickImage(source: ImageSource.camera);
+                                this.setState(() {
+                                  imageFile = File(picture!.path);
+                                });
+                                uploadImage();
+                                //  if (await uploadImage()) {
+                                // await Navigator.push(
+                                // context,
+                                // //MaterialPageRoute(
+                                //    builder: (context) => LoadingPagWidget(),
+                                //   ),
+                                //  );
+                                // }
                               },
                               child: Icon(
                                 Icons.drive_folder_upload,
