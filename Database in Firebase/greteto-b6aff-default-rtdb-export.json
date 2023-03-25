@@ -1,0 +1,109 @@
+{
+  "Disease":
+   {
+    "Grape Black rot": 
+    {
+      "Fertilizer": "Mancozeb , Ziram",
+
+      "Solutions": "Black rot spores love moisture,so you want to reduce the amount of moisture held in the canopy by providing great air circulation"
+    }
+    ,
+
+    "Grape Esca(Black_Measles)": 
+    {
+      "Fertilizer": "No",
+      "Solutions": "Apply dormant sprays to reduce inoculum levels , Cut it out , Scout early, scout often"
+    }
+    ,
+    "Grape Leaf blight(Isariopsis Leaf Spot)":
+     {
+      "Fertilizer": "Fertilizers with NPK",
+
+      "Solutions": "Prune or stake plants to improve air circulation and reduce fungal problems , Make sure to disinfect your pruning shears (one part bleach to 4 parts water) after each cut"
+    },
+    "Grape healthy":
+     {
+      "Fertilizer": "No",
+
+      "Solutions": "No"
+    },
+
+    "Potato Early blight":
+     {
+      "Fertilizer": "Nitrogen Fertilizer",
+
+      "Solutions": "All of the affected leaves of the plant need to be removed. If all leaves on the plant are affected, you will need to pull up the entire plant"
+    },
+    "Potato Late blight": 
+    {
+      "Fertilizer": "Potassium silicate fertiliser",
+
+      "Solutions": "Eliminating cull piles and volunteer potatoes, using proper harvesting and storage practices, and applying fungicides when necessary"
+    },
+    "Potato healthy": 
+    {
+      "Fertilizer": "No",
+
+      "Solutions": "No"
+    },
+    "Tomato Bacterial spot":
+     {
+      "Fertilizer": "no-phosphorous fertilizer , low-phosphorous fertilizer",
+
+      "Solutions": "Copper sprays can be used to control bacterial leaf spot, but they are not as effective when used alone on a continuous basis. Thus, combining these sprays with a plant resistance inducer, such as Regalia or Actigard, can provide good protection from the disease"
+    },
+    "Tomato Early blight": 
+    {
+      "Fertilizer": "Solanum lycopersicum fertilizers",
+
+      "Solutions": "Cover the soil under the plants with mulch, such as fabric, straw, plastic mulch, or dried leaves."
+    },
+    "Tomato Late blight": 
+    {
+      "Fertilizer": "Potassium silicate fertilizer",
+
+      "Solutions": "Spraying fungicides is the most effective way to prevent late blight."
+    },
+    "Tomato Leaf Mold": 
+    {
+      "Fertilizer": "Chlorothalonil, maneb, mancozeb and copper formulations",
+
+      "Solutions": "Remove and destroy all affected plant parts."
+    },
+    "Tomato Septoria leaf spot": 
+    {
+      "Fertilizer": "BioBoost™ All-Natural Foliar Fertilizer",
+
+      "Solutions": "Remove diseased leaves. If caught early, the lower infected leaves can be removed and burned or destroyed"
+    },
+    "Tomato Target Spot": 
+    {
+      "Fertilizer": "120kg Nitrogen (N), 50kg Phosphorus (P2O5), and 50kg Potash (K2O).",
+
+      "Solutions": "Grow the plants in full sunlight. Be sure the plants aren not crowded and that each tomato has plenty of air circulation"
+    },
+    "Tomato Two-spotted spider mite": 
+    {
+      "Fertilizer": "Insecticidal soap and horticultural oil",
+
+      "Solutions": "Physically remove them. Use a high-pressure water spray to dislodge twospotted spider mites"
+    },
+    "Tomato Yellow Leaf Curl Virus": 
+    {
+      "Fertilizer": "Petroleum jelly or Biotac",
+
+      "Solutions": "Use a neonicotinoid insecticide, such as dinotefuran "
+    },
+    "Tomato mosaic virus": 
+    {
+      "Fertilizer": "Calcium nutrition nanoagent",
+      "Solutions": "Remove all infected plants and destroy them. Do NOT put them in the compost pile, as the virus may persist in infected plant matter"
+    },
+    "Tomato healthy": 
+    {
+      "Fertilizer": "No",
+
+      "Solutions": "No"
+    }
+  }
+}
