@@ -10,11 +10,23 @@ output_idx = None
 
 BUCKET_NAME = "gratato-model"
 
-diseases_names = ['Grape__Black_rot', 'Grape_Esca(Black_Measles)', 'Grape__Leaf_blight(Isariopsis_Leaf_Spot)',
-                  'Grape__healthy', 'Potato_Early_blight', 'Potato_Late_blight', 'Potato__healthy',
-                  'Tomato__Bacterial_spot', 'Tomato_Early_blight', 'Tomato_Late_blight', 'Tomato__Leaf_Mold',
-                  'Tomato__Septoria_leaf_spot', 'Tomato_Spider_mites Two-spotted_spider_mite', 'Tomato__Target_Spot',
-                  'Tomato__Tomato_Yellow_Leaf_Curl_Virus', 'Tomato_Tomato_mosaic_virus', 'Tomato__healthy']
+diseases_names = ['Grape__Black_rot',
+                  'Grape_Esca(Black_Measles)',
+                  'Grape__Leaf_blight(Isariopsis_Leaf_Spot)',
+                  'Grape__healthy',
+                  'Potato_Early_blight',
+                  'Potato_Late_blight',
+                  'Potato__healthy',
+                  'Tomato__Bacterial_spot',
+                  'Tomato_Early_blight',
+                  'Tomato_Late_blight',
+                  'Tomato__Leaf_Mold',
+                  'Tomato__Septoria_leaf_spot',
+                  'Tomato_Spider_mites Two-spotted_spider_mite',
+                  'Tomato__Target_Spot',
+                  'Tomato__Tomato_Yellow_Leaf_Curl_Virus',
+                  'Tomato_Tomato_mosaic_virus',
+                  'Tomato__healthy']
 
 
 def download_blob(bucket, source_blob, download_location):
