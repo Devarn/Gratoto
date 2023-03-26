@@ -12,7 +12,10 @@ export 'loading_pag_model.dart';
 class LoadingPagWidget extends StatefulWidget {
   final String diseaseName;
   final String confidence = "";
-  LoadingPagWidget(this.diseaseName, {Key? key}) : super(key: key);
+  final String fertlizer;
+  final String solution;
+  LoadingPagWidget(this.diseaseName, this.fertlizer, this.solution, {Key? key})
+      : super(key: key);
 
   @override
   _LoadingPagWidgetState createState() => _LoadingPagWidgetState();
@@ -35,7 +38,8 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultPageWidget(widget.diseaseName),
+          builder: (context) => ResultPageWidget(
+              widget.diseaseName, widget.fertlizer, widget.solution),
         ),
       );
     });

@@ -1,7 +1,11 @@
-import 'dart:ffi';
+//import 'dart:ffi';
 import 'dart:io';
+//import 'dart:js_util';
+import 'package:flutter_js/flutter_js.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
+import 'package:tutorial/dbHelper/mongodb.dart';
 
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
@@ -10,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import 'image_test_model.dart';
 export 'image_test_model.dart';
 
@@ -24,6 +29,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
   late ImageTestModel _model;
   late String diseaseName;
   late String confidence;
+  late String fertlizer;
+  late String solution;
   File? imageFile;
   final ImagePicker imagePicker = ImagePicker();
 
@@ -44,7 +51,109 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     super.dispose();
   }
 
-  void imageUploadFail() {
+  Future<bool> diseaseInfo() async {
+    bool dbResult = true;
+    var db = await mongo.Db.create(
+            "mongodb+srv://devarn:devarngratoto@cluster0.klypayl.mongodb.net/diseasesDB?retryWrites=true&w=majority")
+        .then((value) {
+      print('Connected to MongoDB Atlas successfully.');
+      return value;
+    }).catchError((error) {
+      print('Failed to connect to MongoDB Atlas: $error');
+      exit(1);
+    });
+
+    await db.open();
+
+    final collection = db.collection("gratoto");
+
+    var query = mongo.where.eq('disease.$diseaseName', {'\$exists': true});
+    final result =
+        await collection.findOne(mongo.where.eq('disease', diseaseName));
+    final fertilizer = result?['Fertilizer'].toString();
+    final treatment = result?['Solutions'].toString();
+    fertlizer = "";
+    solution = " ";
+    fertlizer = fertilizer!;
+    solution = treatment!;
+
+    print('Fertilizer for $diseaseName: $fertilizer');
+    print('Treatment for $diseaseName: $treatment');
+
+    //var fields = <String, dynamic>{'fertilizer': true, 'solutions': true};
+
+    // var result = await collection.findOne(query);
+    // var result = await collection
+    //   .findOne(mongo.where.eq("disease: '$diseaseName'", {'\$exists': true}));
+
+    await db.close();
+
+    if (result == null) {
+      print('No data found for the disease $diseaseName');
+    }
+
+    //final fertilizer = result!['fertilizer'] as String;
+    //final solutions = result['solutions'] as List<dynamic>;
+
+    //final solutionsString = solutions.join(', ');
+
+    print(diseaseName);
+    print(result);
+
+    // showDialog(
+    // context: context,
+    //builder: (BuildContext context) {
+    //return AlertDialog(
+    //title: Text("Text values received"),
+    //content: Text(result.toString()),
+    //actions: [
+    //TextButton(
+    //child: Text("OK"),
+    // onPressed: () {
+    //   Navigator.of(context).pop();
+    //   },
+    //   ),
+    //   ],
+    //   );
+    //   },
+    //   );
+
+    await db.close();
+    return Future.value(dbResult);
+  }
+
+  Future<String> getDiseaseInfo(String diseaseName) async {
+    try {
+      await MongoDatabase.connect;
+      diseaseName = "Grape Black rot";
+      var result = await MongoDatabase.userCollection
+          .findOne({'Disease.${diseaseName}'}.toList());
+      var fertilizer = result.Disease[diseaseName].Fertilizer.toString();
+      var solutions = result.Disease[diseaseName].Solutions.toString();
+      diseaseName = fertilizer;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Text values received"),
+            content: Text(fertilizer),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  // Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+      return Future.value(diseaseName);
+    } finally {}
+  }
+
+  void imageUploadFail([String? s]) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -96,7 +205,10 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
         print('Image uploaded successfully');
         String val = responseString;
         List user = val.split(',');
+
         diseaseName = (user[0]).toString();
+        //getDiseaseInfo(diseaseName);
+
         confidence = (user[1]).toString();
         uploaded = true;
       } else {
@@ -146,8 +258,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      LoadingPagWidget(diseaseName),
+                                  builder: (context) => LoadingPagWidget(
+                                      diseaseName, fertlizer, solution),
                                 ),
                               );
                             }
@@ -191,13 +303,19 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                                 });
                                 uploadImage();
                                 if (await uploadImage()) {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          LoadingPagWidget(diseaseName),
-                                    ),
-                                  );
+                                  diseaseInfo();
+
+                                  if (await diseaseInfo()) {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoadingPagWidget(
+                                            diseaseName, fertlizer, solution),
+                                      ),
+                                    );
+                                    print("starteedddddddd");
+                                  } else
+                                    imageUploadFail("db acccses failes");
                                 }
                               },
                               child: Icon(

@@ -10,7 +10,10 @@ export 'result_page_model.dart';
 class ResultPageWidget extends StatefulWidget {
   final String diseaseName;
   final String confidence = "";
-  ResultPageWidget(this.diseaseName, {Key? key}) : super(key: key);
+  final String fertlizer;
+  final String solution;
+  ResultPageWidget(this.diseaseName, this.fertlizer, this.solution, {Key? key})
+      : super(key: key);
 
   @override
   _ResultPageWidgetState createState() => _ResultPageWidgetState();
@@ -142,7 +145,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
                       child: Text(
-                        'Recommanded Solution :   To prevent late blight in tomato plants: rotate crops, use resistant varieties, practice sanitation, use fungicides, control moisture, and monitor plants for signs of disease.',
+                        widget.solution,
                         style: FlutterFlowTheme.of(context).subtitle1.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,
@@ -171,7 +174,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 0.0),
                       child: Text(
-                        'Recomended Fertilizers :  To prevent tomato late blight, use balanced fertilizers with an NPK ratio of 10-10-10 or 20-20-20, apply at planting time and every 3-4 weeks, use organic fertilizers, and avoid over-fertilization.',
+                        widget.fertlizer,
                         style: FlutterFlowTheme.of(context).subtitle1.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,
