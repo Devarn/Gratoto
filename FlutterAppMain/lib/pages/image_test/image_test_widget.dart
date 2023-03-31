@@ -2,6 +2,7 @@
 import 'dart:io';
 //import 'dart:js_util';
 import 'package:flutter_js/flutter_js.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
@@ -53,6 +54,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
 
   Future<bool> diseaseInfo() async {
     bool dbResult = true;
+
     var db = await mongo.Db.create(
             "mongodb+srv://devarn:devarngratoto@cluster0.klypayl.mongodb.net/diseasesDB?retryWrites=true&w=majority")
         .then((value) {
@@ -80,43 +82,14 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     print('Fertilizer for $diseaseName: $fertilizer');
     print('Treatment for $diseaseName: $treatment');
 
-    //var fields = <String, dynamic>{'fertilizer': true, 'solutions': true};
-
-    // var result = await collection.findOne(query);
-    // var result = await collection
-    //   .findOne(mongo.where.eq("disease: '$diseaseName'", {'\$exists': true}));
-
     await db.close();
 
     if (result == null) {
       print('No data found for the disease $diseaseName');
     }
 
-    //final fertilizer = result!['fertilizer'] as String;
-    //final solutions = result['solutions'] as List<dynamic>;
-
-    //final solutionsString = solutions.join(', ');
-
     print(diseaseName);
     print(result);
-
-    // showDialog(
-    // context: context,
-    //builder: (BuildContext context) {
-    //return AlertDialog(
-    //title: Text("Text values received"),
-    //content: Text(result.toString()),
-    //actions: [
-    //TextButton(
-    //child: Text("OK"),
-    // onPressed: () {
-    //   Navigator.of(context).pop();
-    //   },
-    //   ),
-    //   ],
-    //   );
-    //   },
-    //   );
 
     await db.close();
     return Future.value(dbResult);
@@ -174,6 +147,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
   }
 
   Future<bool> uploadImage() async {
+    Fluttertoast.showToast(msg: 'Image is being uploaded');
     final uri = Uri.parse(
         "https://us-central1-gratato-381114.cloudfunctions.net/predict");
     var request = http.MultipartRequest('POST', uri);
@@ -184,24 +158,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     try {
       var response = await request.send();
       if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Image uploaded successfully');
         String responseString = await response.stream.bytesToString();
-        //showDialog(
-        //    context: context,
-        //   builder: (BuildContext context) {
-        //      return AlertDialog(
-        //        title: Text("Text values received"),
-        //       content: Text(responseString),
-        //        actions: [
-        //         TextButton(
-        //           child: Text("OK"),
-        //           onPressed: () {
-        //              // Navigator.of(context).pop();
-        //            },
-        //         ),
-        //      ],
-        //      );
-        //     },
-        //    );
         print('Image uploaded successfully');
         String val = responseString;
         List user = val.split(',');
@@ -214,10 +172,13 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
       } else {
         uploaded = false;
         imageUploadFail();
+        Fluttertoast.showToast(msg: 'Image upload failed');
         print('Image upload failed with status code ${response.statusCode}');
       }
     } catch (e) {
       print('Error uploading image: $e');
+      Fluttertoast.showToast(msg: 'unexpected error in uploading');
+      imageUploadFail();
     }
     return Future.value(uploaded);
   }
@@ -251,17 +212,26 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             EdgeInsetsDirectional.fromSTEB(50.0, 0.0, 0.0, 20),
                         child: InkWell(
                           onTap: () async {
-                            final imagePicker = ImagePicker();
-                            XFile? pickedImage = await imagePicker.pickImage(
-                                source: ImageSource.camera);
-                            if (pickedImage != null) {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoadingPagWidget(
-                                      diseaseName, fertlizer, solution),
-                                ),
-                              );
+                            var picture = await ImagePicker()
+                                .pickImage(source: ImageSource.camera);
+                            if (picture == null) {
+                              return;
+                            }
+                            this.setState(() {
+                              imageFile = File(picture!.path);
+                            });
+                            if (await uploadImage()) {
+                              if (await diseaseInfo()) {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoadingPagWidget(
+                                        diseaseName, fertlizer, solution),
+                                  ),
+                                );
+                                print("started");
+                              } else
+                                imageUploadFail("db acccses failed");
                             }
                           },
                           child: Container(
@@ -298,13 +268,15 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                               onTap: () async {
                                 var picture = await ImagePicker()
                                     .pickImage(source: ImageSource.gallery);
+                                if (picture == null) {
+                                  return;
+                                }
+
                                 this.setState(() {
                                   imageFile = File(picture!.path);
                                 });
-                                uploadImage();
+                                // uploadImage();
                                 if (await uploadImage()) {
-                                  diseaseInfo();
-
                                   if (await diseaseInfo()) {
                                     await Navigator.push(
                                       context,
@@ -313,9 +285,9 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                                             diseaseName, fertlizer, solution),
                                       ),
                                     );
-                                    print("starteedddddddd");
+                                    print("started");
                                   } else
-                                    imageUploadFail("db acccses failes");
+                                    imageUploadFail("db acccses failed");
                                 }
                               },
                               child: Icon(
@@ -360,7 +332,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(50.0, 0.0, 50.0, 0.0),
                   child: Text(
-                    '    Your Plant Doctor In\n            Your Pocket',
+                    '    Your Plant Doctor\n in\nYour Pocket!',
+                    textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).title3.override(
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.w600,

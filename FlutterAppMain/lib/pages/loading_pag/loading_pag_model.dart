@@ -13,6 +13,7 @@ class LoadingPagModel extends FlutterFlowModel {
 
   void dispose() {}
 
-  /// Additional helper methods are added here.
+  void updatePercentage(double percentage) {}
 
+  /// Additional helper methods are added here.
 }

@@ -23,6 +23,7 @@ class LoadingPagWidget extends StatefulWidget {
 
 class _LoadingPagWidgetState extends State<LoadingPagWidget> {
   late LoadingPagModel _model;
+  double _percentage = 0.0;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
@@ -32,9 +33,29 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
     super.initState();
     _model = createModel(context, () => LoadingPagModel());
 
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(milliseconds: 3000));
+    // Call your function that updates the percentage value here
+    // You can pass a boolean value to indicate the progress of your function
+    updatePercentage(false);
+  }
+
+  void updatePercentage(bool isProgress) async {
+    // You can define the percentage value based on the progress of your function
+    double percentage = isProgress ? 0.5 : 1.0;
+
+    // Update the percentage value in the model
+    setState(() {
+      _percentage = percentage;
+    });
+    _model.updatePercentage(percentage);
+
+    // Wait for a short duration before updating the percentage value again
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Call your function again with a new boolean value to update the percentage value
+    // You can repeat this process until the function has finished
+    if (isProgress == false) {
+      updatePercentage(true);
+    } else {
       await Navigator.push(
         context,
         MaterialPageRoute(
@@ -42,7 +63,7 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
               widget.diseaseName, widget.fertlizer, widget.solution),
         ),
       );
-    });
+    }
   }
 
   @override
@@ -85,7 +106,7 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
                     child: CircularPercentIndicator(
-                      percent: 1.0,
+                      percent: _percentage,
                       radius: 80.0,
                       lineWidth: 15.0,
                       animation: true,
