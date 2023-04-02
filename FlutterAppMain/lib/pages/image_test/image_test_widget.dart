@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 import 'image_test_model.dart';
 export 'image_test_model.dart';
@@ -53,6 +55,61 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     super.dispose();
   }
 
+  Future<String> _getNewImageFileName() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final files = await directory.list().toList();
+    final imageFiles =
+        files.where((file) => path.extension(file.path) == '.jpg').toList();
+    final imageCount = imageFiles.length;
+    //return '$directory/${imageCount + 1}.jpg';
+    return '${imageCount + 1}';
+  }
+
+  Future<void> _saveImage() async {
+    if (imageFile != null) {
+      try {
+        final appDir = await getApplicationDocumentsDirectory();
+
+        final newFileName = await _getNewImageFileName();
+        final savedImage =
+            await imageFile!.copy('${appDir.path}/$newFileName.jpg');
+        final File file = File('${appDir.path}/$newFileName.txt');
+
+        if (!await file.exists()) {
+          await file.create(recursive: true);
+        }
+
+        await file.writeAsString('$diseaseName,$fertilizer,$solution');
+
+        // final savedImage = await imageFile!.copy(newFileName);
+        //await imageFile!.copy(newFileName);
+        //await ImageGallerySaver.saveFile(newFileName);
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  Future<String> saveImage(File image) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final fileName = '3.png';
+    final savedImage = await image.copy('${appDir.path}/$fileName');
+    print(savedImage.path);
+    print("checking path");
+    return savedImage.path;
+  }
+
+  //last one
+  Future<File> _getLocalFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File('${directory.path}/image.jpg');
+  }
+
+  void _saveImagfe(File image) async {
+    final localFile = await _getLocalFile();
+    await localFile.writeAsBytes(await image.readAsBytes());
+  }
+
   Future<bool> diseaseInfo() async {
     bool dbResult = true;
 
@@ -79,8 +136,12 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     var query = mongo.where.eq('disease.$diseaseName', {'\$exists': true});
     final result =
         await collection.findOne(mongo.where.eq('disease', diseaseName));
+
     final fertlizer = result?['Fertilizer'].toString();
     final treatment = result?['Solutions'].toString();
+    if (fertlizer == null) {
+      final fertlizer = "f";
+    }
     fertilizer = "";
     solution = " ";
 
@@ -113,11 +174,11 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
   Future<File> get _localFile async {
     final path = await _localPath;
     //File('$path/1.txt').delete();
-    final File newImage = await imageFile!.copy('$path/1.png');
+    // final File newImage = await imageFile!.copy('$path/1.png');
     return File('$path/1.txt');
   }
 
-  Future<File> writeCounter() async {
+  Future<File> writeCounter(String name) async {
     final file = await _localFile;
 
     // Write the file
@@ -329,6 +390,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             });
                             if (await uploadImage()) {
                               if (await diseaseInfo()) {
+                                await _saveImage();
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -387,22 +449,13 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                                 this.setState(() {
                                   imageFile = File(picture.path);
                                 });
-                                File tmpFile = File(imageFile!.path);
 
-                                // 5. Get the path to the apps directory so we can save the file to it.
-
-                                // 6. Save the file by copying it to the new location on the device.
-
-                                // showLoadingDialog(context, "okay", 20);
-                                //  await Future.delayed(Duration(seconds: 2));
-                                //  showLoadingDialog(context, "okay", 40);
-                                //  showLoadingDialog(context, "okay", 60);
-                                // uploadImage();
                                 if (await uploadImage()) {
                                   if (await diseaseInfo()) {
-                                    _localPath;
-                                    _localFile;
-                                    writeCounter();
+                                    await _saveImage();
+                                    //    _localPath;
+                                    //  _localFile;
+                                    //writeCounter();
                                     await Navigator.push(
                                       context,
                                       MaterialPageRoute(
