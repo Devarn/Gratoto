@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../config/ui_model.dart';
 import '../config/ui_theme.dart';
 import '../config/ui_widgets.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_model.dart';
+import 'package:path_provider/path_provider.dart';
 export 'home_model.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -34,6 +37,89 @@ class _HomeWidgetState extends State<HomeWidget> {
 
     _unfocusNode.dispose();
     super.dispose();
+  }
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  void showMyDialog(
+      BuildContext context, String fileName, String message) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String filePath = '${appDocDir.path}/$fileName';
+    File imageFile = File(filePath);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Image(
+            image: FileImage(imageFile),
+            height: 100,
+            width: 100,
+          ),
+          content: Text(
+            message,
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/1.txt');
+  }
+
+  Future<File> writeCounter(String counter) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString(counter);
+  }
+
+  Future readCounter() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      final contents = await file.readAsString();
+      showMyDialog(context, '1', contents.toString());
+    } catch (e) {
+      // If encountering an error, return 0
+      return 0;
+    }
+  }
+
+  void imageUploadFail([String? s]) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Image upload has failed"),
+          content: Text("Please try uploading again"),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -145,6 +231,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                 alignment: AlignmentDirectional(-0.05, 0.86),
                 child: FFButtonWidget(
                   onPressed: () async {
+                    _localPath;
+                    _localFile;
+                    //  writeCounter("plant diease grape");
+
+                    //  writeCounter("plant dieasffe grape");
+                    readCounter();
+
                     await Navigator.push(
                       context,
                       MaterialPageRoute(

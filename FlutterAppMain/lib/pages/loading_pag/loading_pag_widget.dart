@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
 import '/pages/result_page/result_page_widget.dart';
@@ -14,7 +16,11 @@ class LoadingPagWidget extends StatefulWidget {
   final String confidence = "";
   final String fertlizer;
   final String solution;
-  LoadingPagWidget(this.diseaseName, this.fertlizer, this.solution, {Key? key})
+  final File imageFile;
+
+  LoadingPagWidget(
+      this.imageFile, this.diseaseName, this.fertlizer, this.solution,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -35,12 +41,12 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
 
     // Call your function that updates the percentage value here
     // You can pass a boolean value to indicate the progress of your function
-    updatePercentage(false);
+    updatePercentage(true);
   }
 
   void updatePercentage(bool isProgress) async {
     // You can define the percentage value based on the progress of your function
-    double percentage = isProgress ? 0.5 : 1.0;
+    double percentage = isProgress ? 0.1 : 1.0;
 
     // Update the percentage value in the model
     setState(() {
@@ -59,7 +65,7 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ResultPageWidget(
+          builder: (context) => ResultPageWidget(widget.imageFile,
               widget.diseaseName, widget.fertlizer, widget.solution),
         ),
       );
