@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
 import '/pages/who_we_are/who_we_are_widget.dart';
@@ -5,10 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'result_page_model.dart';
+import '/pages/image_test/image_test_widget.dart';
 export 'result_page_model.dart';
 
 class ResultPageWidget extends StatefulWidget {
-  const ResultPageWidget({Key? key}) : super(key: key);
+  final String diseaseName;
+  final String confidence = "";
+  final String fertlizer;
+  final String solution;
+  final File imageFile;
+  ResultPageWidget(
+      this.imageFile, this.diseaseName, this.fertlizer, this.solution,
+      {Key? key})
+      : super(key: key);
 
   @override
   _ResultPageWidgetState createState() => _ResultPageWidgetState();
@@ -18,6 +29,14 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
   late ResultPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  Future<bool> _onBackPressed() async {
+    // Navigate to a specific page when the back button is pressed
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ImageTestWidget()),
+    );
+    return false; // return false to let the system know we have handled the back button press
+  }
 
   @override
   void initState() {
@@ -35,6 +54,8 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //onWillPop: _onBackPressed,
+
       key: scaffoldKey,
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -85,8 +106,9 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
-                child: Image.asset(
-                  'assets/images/Tomato-late-blight-72605cba08f2483aae0fd8f1dc3532a9.jpg',
+                child: Image.file(
+                  //  'assets/images/Tomato-late-blight-72605cba08f2483aae0fd8f1dc3532a9.jpg',
+                  widget.imageFile,
                   width: 296.6,
                   height: 228.1,
                   fit: BoxFit.cover,
@@ -110,7 +132,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
                       child: Text(
-                        'Name : Tomato Late Blight',
+                        widget.diseaseName,
                         style: FlutterFlowTheme.of(context).subtitle1.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,
@@ -140,7 +162,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
                       child: Text(
-                        'Recommanded Solution :   To prevent late blight in tomato plants: rotate crops, use resistant varieties, practice sanitation, use fungicides, control moisture, and monitor plants for signs of disease.',
+                        widget.solution,
                         style: FlutterFlowTheme.of(context).subtitle1.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,
@@ -169,7 +191,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       padding:
                           EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 0.0),
                       child: Text(
-                        'Recomended Fertilizers :  To prevent tomato late blight, use balanced fertilizers with an NPK ratio of 10-10-10 or 20-20-20, apply at planting time and every 3-4 weeks, use organic fertilizers, and avoid over-fertilization.',
+                        widget.fertlizer,
                         style: FlutterFlowTheme.of(context).subtitle1.override(
                               fontFamily: 'Poppins',
                               color: Colors.white,
