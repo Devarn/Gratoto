@@ -270,40 +270,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                               )))),
                   Align(
                     alignment: Alignment.center,
-                    child: FutureBuilder<String>(
-                      future: _fetchFact(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        if (snapshot.hasData) {
-                          return TextField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              hintText:
-                                  'Press the button to fetch a random Amazon fact',
-                            ),
-                            style: TextStyle(fontSize: 20.0),
-                            controller:
-                                TextEditingController(text: snapshot.data),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('Failed to fetch fact');
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
                     child: FFButtonWidget(
                       onPressed: () async {
-                        _localPath;
-                        _localFile;
-                        //  writeCounter("plant diease grape");
-
-                        //  writeCounter("plant dieasffe grape");
-                        // readCounter();
-
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -311,7 +279,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           ),
                         );
                       },
-                      text: 'Detect the Disease',
+                      text: 'Detect Disease',
                       options: FFButtonOptions(
                         width: 160,
                         height: 60,

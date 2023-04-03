@@ -16,6 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:connectivity/connectivity.dart';
 
 import 'image_test_model.dart';
 export 'image_test_model.dart';
@@ -29,14 +30,15 @@ class ImageTestWidget extends StatefulWidget {
 
 class _ImageTestWidgetState extends State<ImageTestWidget> {
   late ImageTestModel _model;
-  late String diseaseName;
-  late String confidence;
-  late String fertilizer;
-  late String solution;
-  bool isLoading = false;
+  late String diseaseName; //name of dieases detected
+  late String confidence; //confidence of ml model
 
-  late File? imageFile;
-  final ImagePicker imagePicker = ImagePicker();
+  late String fertilizer; //fertiizer taken
+  late String solution; //soution taken from DB
+  bool isLoading = false; //is the ciriclar indcator loading
+
+  late File? imageFile; //the image selected
+  final ImagePicker imagePicker = ImagePicker(); //image picker to get the image
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
@@ -56,137 +58,120 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
   }
 
   Future<String> _getNewImageFileName() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final files = await directory.list().toList();
-    final imageFiles =
-        files.where((file) => path.extension(file.path) == '.jpg').toList();
-    final imageCount = imageFiles.length;
-    //return '$directory/${imageCount + 1}.jpg';
-    return '${imageCount + 1}';
+    try {
+//get the direcotry where this app stores its documents
+      final directory = await getApplicationDocumentsDirectory();
+      //creates a list of all the files in the above diretory
+      final files = await directory.list().toList();
+      //get t he ones that end with jpg extension
+      final imageFiles =
+          files.where((file) => path.extension(file.path) == '.jpg').toList();
+      //get the number of suc files in the directory
+
+      final imageCount = imageFiles.length;
+      //add one to it so the new file can be saved later as such
+      return '${imageCount + 1}';
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'unexpected error in searching for files');
+      return ('99'); //give a fixed value which is unlikely to be reached soon
+    }
   }
 
   Future<void> _saveImage() async {
     if (imageFile != null) {
+      //check if image file is null or not
       try {
+        //get the app document directroy
         final appDir = await getApplicationDocumentsDirectory();
-
+//call funtion to get the new file name
         final newFileName = await _getNewImageFileName();
+        //save image as the new file name
         final savedImage =
             await imageFile!.copy('${appDir.path}/$newFileName.jpg');
+        //create a txt file to store info with the same file name
         final File file = File('${appDir.path}/$newFileName.txt');
 
         if (!await file.exists()) {
           await file.create(recursive: true);
         }
+        //write the disease,fertlizer and solution to this file seprated by commas
+        //so it can be split later and given to navigator
 
         await file.writeAsString('$diseaseName,$fertilizer,$solution');
-
-        // final savedImage = await imageFile!.copy(newFileName);
-        //await imageFile!.copy(newFileName);
-        //await ImageGallerySaver.saveFile(newFileName);
       } catch (e) {
+        Fluttertoast.showToast(msg: 'unexpected error in saving files');
+
         print(e);
       }
     }
   }
 
-  Future<String> saveImage(File image) async {
-    final appDir = await getApplicationDocumentsDirectory();
-    final fileName = '3.png';
-    final savedImage = await image.copy('${appDir.path}/$fileName');
-    print(savedImage.path);
-    print("checking path");
-    return savedImage.path;
-  }
-
-  //last one
-  Future<File> _getLocalFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/image.jpg');
-  }
-
-  void _saveImagfe(File image) async {
-    final localFile = await _getLocalFile();
-    await localFile.writeAsBytes(await image.readAsBytes());
-  }
-
   Future<bool> diseaseInfo() async {
     bool dbResult = true;
-
-    showLoadingDialog(context, "Connecting to database!", 70);
-
+//call the circular indicator function with a value of 70 percent
+    showLoadingDialog(context, "Connecting to database!", 70, true);
+//create connection with our dieases database
     var db = await mongo.Db.create(
             "mongodb+srv://devarn:devarngratoto@cluster0.klypayl.mongodb.net/diseasesDB?retryWrites=true&w=majority")
         .then((value) {
-      print('Connected to MongoDB Atlas successfully.');
-
+      print('Connected to MongoDB Atlas successfully.'); //to check in debug
+//update the progrees to 80
       showLoadingDialog(
-          context, "Finding the best solutions just for you!", 80);
+          context, "Finding the best solutions just for you!", 80, true);
       return value;
+      //error handling below
     }).catchError((error) {
+      Fluttertoast.showToast(msg: 'unexpected error in saving files');
+
       print('Failed to connect to MongoDB Atlas: $error');
 
       exit(1);
     });
-
+//open a connection to the database
     await db.open();
+    //get the collection called gratoto which has our data base
 
     final collection = db.collection("gratoto");
-
-    var query = mongo.where.eq('disease.$diseaseName', {'\$exists': true});
+//find the section which has the current disease name
     final result =
         await collection.findOne(mongo.where.eq('disease', diseaseName));
-
+//seperate the retuirn values as the named fertilize and solution
     final fertlizer = result?['Fertilizer'].toString();
     final treatment = result?['Solutions'].toString();
-    if (fertlizer == null) {
-      final fertlizer = "f";
-    }
+//doe just for checking if in case it is null
     fertilizer = "";
     solution = " ";
+    //printing to see if it works in the debug
 
     print('Fertilizer for $diseaseName: $fertlizer');
     print('Treatment for $diseaseName: $treatment');
+    //i did this to set the global fertilzer and solution to the vales we just got
     fertilizer = fertlizer!;
     solution = treatment!;
-
+//close connection o the database
     await db.close();
-
+//just in case the result isnt there
     if (result == null) {
       print('No data found for the disease $diseaseName');
+      fertilizer = "Not found";
+      solution = "not found";
     }
-    showLoadingDialog(context, "Operation is a blooming success!", 100);
+    //update the idicator to 100 and give artifical time of 500ms
+    showLoadingDialog(context, "Operation is a blooming success!", 100, true);
     await Future.delayed(Duration(milliseconds: 1000));
-    print(diseaseName);
+    print(diseaseName); //just to check in debugger
     print(result);
-
+//close connection to the database again just in case
     await db.close();
+    //return the values we jsut got
 
     return Future.value(dbResult);
   }
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    //File('$path/1.txt').delete();
-    // final File newImage = await imageFile!.copy('$path/1.png');
-    return File('$path/1.txt');
-  }
-
-  Future<File> writeCounter(String name) async {
-    final file = await _localFile;
-
-    // Write the file
-    return file.writeAsString(diseaseName);
-  }
-
+//there are 2 loading screens since i wasnt able to get the blur effect and pop
+//togther. so i created 2 dialog boxes for the perctanges one with blue and one without
   void showLoadingDialogBlur(
-      BuildContext context, String message, double numbert) {
+      BuildContext context, String message, double number) {
     //Navigator.pop(context);
     showDialog(
       context: context,
@@ -210,7 +195,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildCircularIndicator(numbert),
+                _buildCircularIndicator(number),
                 SizedBox(height: 16.0),
                 Text(message),
               ],
@@ -221,12 +206,20 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     );
   }
 
-  void showLoadingDialog(BuildContext context, String message, double numbert) {
-    //Navigator.pop(context);
+//dilaog box without blur
+  void showLoadingDialog(
+      BuildContext context, String message, double number, bool transparent) {
+    late Color colorBarrier;
+    if (transparent) {
+      colorBarrier = Colors.transparent;
+    } else {
+      colorBarrier = Color(0x8A000000);
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.transparent,
+      barrierColor: colorBarrier,
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
@@ -246,7 +239,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildCircularIndicator(numbert),
+                _buildCircularIndicator(number),
                 SizedBox(height: 16.0),
                 Text(message),
               ],
@@ -277,47 +270,99 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     );
   }
 
-  Future<bool> uploadImage() async {
-    // Fluttertoast.showToast(msg: 'Image is being uploaded');
-    showLoadingDialogBlur(context, "Uploading image", 20);
-    final uri = Uri.parse(
-        "https://us-central1-gratato-381114.cloudfunctions.net/predict");
-    var request = http.MultipartRequest('POST', uri);
-    bool uploaded = false;
-    request.headers['Content-Type'] = 'multipart/form-data';
-    request.files
-        .add(await http.MultipartFile.fromPath('file', imageFile!.path));
-    try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        showLoadingDialog(context, "Image uploaded successfully", 40);
-        Fluttertoast.showToast(msg: 'Image uploaded successfully');
-        await Future.delayed(Duration(milliseconds: 500));
-
-        showLoadingDialog(context, "Processing image", 60);
-        String responseString = await response.stream.bytesToString();
-        print('Image uploaded successfully');
-        String val = responseString;
-        List user = val.split(',');
-
-        diseaseName = (user[0]).toString();
-        //getDiseaseInfo(diseaseName);
-
-        confidence = (user[1]).toString();
-        print("hello+$confidence");
-        uploaded = true;
-      } else {
-        uploaded = false;
-
-        imageUploadFail();
-        Fluttertoast.showToast(msg: 'Image upload failed');
-        print('Image upload failed with status code ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error uploading image: $e');
-      Fluttertoast.showToast(msg: 'unexpected error in uploading');
-      imageUploadFail();
+  Future<bool> checkNetwork() async {
+    bool network = true;
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      network = true;
+    } else {
+      //Fluttertoast.showToast(msg: 'no network');
+      network = false;
     }
+    return network;
+  }
+
+  Future<bool> uploadImage() async {
+    Navigator.pop;
+    // Fluttertoast.showToast(msg: 'Image is being uploaded');
+
+    //make uri object with our cloud predict funtion url
+    bool uploaded = false;
+    late Uri uri;
+    if (await checkNetwork()) {
+      showLoadingDialog(context, "Uploading image", 20, false);
+
+      try {
+        print("1a");
+        uri = Uri.parse(
+            "https://us-central1-gratato-381114.cloudfunctions.net/predict");
+
+        print("2a");
+        //makling a multipart rquest using POST or our above url
+        var request = http.MultipartRequest('POST', uri);
+        print("3a");
+
+        //since the below is a mulirpart part header we set it as such
+        request.headers['Content-Type'] = 'multipart/form-data';
+        print("4a");
+        //addig the iage that the user ewlcted tot he request as name file(file is request by GCP)
+        request.files
+            .add(await http.MultipartFile.fromPath('file', imageFile!.path));
+
+        //try sending the request
+        var response = await request.send();
+
+        print("7a");
+        if (response.statusCode == 200) {
+          print("8a");
+          //if successul show as such
+          //update percentage
+          showLoadingDialog(context, "Image uploaded successfully", 40, true);
+          // Fluttertoast.showToast(msg: 'Image uploaded successfully'); done just to check
+          await Future.delayed(
+              Duration(milliseconds: 1000)); //artifical time extension
+//update percentage
+          showLoadingDialog(context, "Processing image", 60, true);
+          //convert the incoming respose as a string
+          String responseString = await response.stream.bytesToString();
+          print('Image uploaded successfully');
+          String val = responseString;
+          //spliot the string at commas to get the info correctly
+          List user = val.split(',');
+
+          diseaseName = (user[0]).toString();
+          //getDiseaseInfo(diseaseName);
+
+          confidence = (user[1]).toString();
+          print("confidence+$confidence");
+          uploaded = true;
+        } else {
+          uploaded = false;
+//ifthe upload is false show a diloag that says image upload failed
+          imageUploadFail();
+          Fluttertoast.showToast(msg: 'Image upload failed');
+          print('Image upload failed with status code ${response.statusCode}');
+        }
+      } catch (e) {
+        print("error caught");
+        imageUploadFail();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error.'),
+        ));
+        //Fluttertoast.showToast(msg: 'Network error.Please check your network');
+        setState(() {
+          isLoading = false;
+          isLoading = false;
+          diseaseName = "";
+          confidence = "";
+        });
+        return Future.value(false);
+      }
+    } else {
+      Fluttertoast.showToast(msg: 'no network connection');
+    }
+
     return Future.value(uploaded);
   }
 
@@ -391,7 +436,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             if (await uploadImage()) {
                               if (await diseaseInfo()) {
                                 await _saveImage();
-                                await Navigator.push(
+                                await Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => LoadingPagWidget(
@@ -449,26 +494,33 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                                 this.setState(() {
                                   imageFile = File(picture.path);
                                 });
+                                await Future.delayed(
+                                    Duration(milliseconds: 1000));
 
-                                if (await uploadImage()) {
-                                  if (await diseaseInfo()) {
-                                    await _saveImage();
-                                    //    _localPath;
-                                    //  _localFile;
-                                    //writeCounter();
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ResultPageWidget(
-                                            imageFile!,
-                                            diseaseName,
-                                            fertilizer,
-                                            solution),
-                                      ),
-                                    );
-                                    print("started");
-                                  } else
-                                    imageUploadFail("db acccess failed");
+                                try {
+                                  if (await uploadImage()) {
+                                    if (await diseaseInfo()) {
+                                      await _saveImage();
+
+                                      await Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ResultPageWidget(
+                                                  imageFile!,
+                                                  diseaseName,
+                                                  fertilizer,
+                                                  solution),
+                                        ),
+                                      );
+                                      print("started");
+                                    } else
+                                      imageUploadFail("db acccess failed");
+                                  }
+                                } on SocketException catch (e) {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          'Network error.Please check your network');
                                 }
                               },
                               child: Icon(
@@ -525,7 +577,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
               Align(
                 alignment: AlignmentDirectional(0.52, 0.95),
                 child: Text(
-                  'Upload From \n This Device',
+                  'Upload from \n this device',
                   style: FlutterFlowTheme.of(context).bodyText1.override(
                         fontFamily: 'Poppins',
                         color: Colors.black,
@@ -536,7 +588,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
               Align(
                 alignment: AlignmentDirectional(-0.56, 0.95),
                 child: Text(
-                  '  Open\nCamera',
+                  '  Open\ncamera',
                   style: FlutterFlowTheme.of(context).bodyText1.override(
                         fontFamily: 'Poppins',
                         color: Colors.black,
