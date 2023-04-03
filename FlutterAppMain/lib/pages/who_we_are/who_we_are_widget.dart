@@ -68,7 +68,9 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 0.0),
                   child: Container(
                     width: 377.4,
+
                     height: 280,
+
                     decoration: BoxDecoration(
                       color: Color(0x68185F1C),
                       borderRadius: BorderRadius.circular(15.0),
@@ -84,8 +86,9 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                               FlutterFlowTheme.of(context).bodyText1.override(
                                     fontFamily: 'Poppins',
                                     color: Color(0xFF052106),
+
                                     fontSize: 13.5,
-                                    fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w600,
                                   ),
                         ),
                       ),
@@ -103,8 +106,12 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
+
                     'assets/images/sahas.jpg',
-                    fit: BoxFit.cover,
+
+                  
+
+                   fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -118,7 +125,11 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
+
                     'assets/images/sara.JPG',
+
+                    '
+
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -135,7 +146,11 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                       shape: BoxShape.circle,
                     ),
                     child: Image.asset(
+
                       'assets/images/dev.jpg',
+
+                      
+
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -153,7 +168,10 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                       shape: BoxShape.circle,
                     ),
                     child: Image.asset(
+
                       'assets/images/sac.jpg',
+
+
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -171,7 +189,11 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
                       shape: BoxShape.circle,
                     ),
                     child: Image.asset(
+
                       'assets/images/prath.png',
+
+        
+
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -213,7 +235,11 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
               Align(
                 alignment: AlignmentDirectional(0.43, 0.05),
                 child: Text(
+
                   'Prathikshan',
+
+              
+
                   style: FlutterFlowTheme.of(context).bodyText1.override(
                         fontFamily: 'Poppins',
                         color: Colors.black,
@@ -235,8 +261,10 @@ class _WhoWeAreWidgetState extends State<WhoWeAreWidget> {
               Align(
                 alignment: AlignmentDirectional(0.0, -0.97),
                 child: Container(
+
                   width: 130.0,
                   height: 130.0,
+
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
