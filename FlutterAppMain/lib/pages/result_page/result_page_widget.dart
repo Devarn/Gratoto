@@ -115,92 +115,131 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                 ),
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
-                child: Container(
-                  width: 322.2,
-                  height: 54.5,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF052106),
-                    borderRadius: BorderRadius.circular(20.0),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      'Disease Name',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            color: Color(0xFF82878C),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
                   ),
-                  child: Align(
-                    alignment: AlignmentDirectional(-0.8, -0.75),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
-                      child: Text(
-                        widget.diseaseName,
-                        style: FlutterFlowTheme.of(context).subtitle1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.normal,
-                            ),
+                  Container(
+                    width: 322.2,
+                    height: 54.5,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF052106),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Align(
+                      alignment: AlignmentDirectional(-0.8, -0.75),
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
+                        child: Text(
+                          widget.diseaseName,
+                          style:
+                              FlutterFlowTheme.of(context).subtitle1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                child: Container(
-                  width: 322.2,
-                  height: 117.7,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF052106),
-                    borderRadius: BorderRadius.circular(20.0),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      'Solution',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            color: Color(0xFF82878C),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
                   ),
-                  child: Align(
-                    alignment: AlignmentDirectional(-0.85, -0.65),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
-                      child: Text(
-                        widget.solution,
-                        style: FlutterFlowTheme.of(context).subtitle1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              fontSize: 14.0,
-                            ),
+                  Container(
+                    width: 322.2,
+                    height: 117.7,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF052106),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Align(
+                      alignment: AlignmentDirectional(-0.85, -0.65),
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
+                        child: Text(
+                          widget.solution,
+                          style:
+                              FlutterFlowTheme.of(context).subtitle1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                  ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            Align(
-              alignment: AlignmentDirectional(0.0, 0.0),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                child: Container(
-                  width: 322.2,
-                  height: 154.5,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF052106),
-                    borderRadius: BorderRadius.circular(20.0),
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      'Fertilizer',
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            color: Color(0xFF82878C),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
                   ),
-                  child: Align(
-                    alignment: AlignmentDirectional(-0.85, -0.2),
-                    child: Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 0.0),
-                      child: Text(
-                        widget.fertlizer,
-                        style: FlutterFlowTheme.of(context).subtitle1.override(
-                              fontFamily: 'Poppins',
-                              color: Colors.white,
-                              fontSize: 14.0,
-                            ),
+                  Container(
+                    width: 322.2,
+                    height: 117.7,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF052106),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Align(
+                      alignment: AlignmentDirectional(-0.85, -0.2),
+                      child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
+                        child: Text(
+                          widget.fertlizer,
+                          style:
+                              FlutterFlowTheme.of(context).subtitle1.override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 14.0,
+                                  ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
