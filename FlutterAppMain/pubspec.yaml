@@ -57,7 +57,8 @@ dependencies:
   video_player_avfoundation: ^2.4.2
   video_player_platform_interface: ^6.1.0
   video_player_web: ^2.0.15
-    
+  firebase_auth: ^4.2.9
+  firebase_core: ^2.7.0    
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "404467407419",
+    "project_id": "gratato-8c6ac",
+    "storage_bucket": "gratato-8c6ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404467407419:android:4326a020b3d87885e0da1e",
+        "android_client_info": {
+          "package_name": "com.mycompany.tutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404467407419-prcqgcqbalbgdj0l9kaqrqfc0aaqt35r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.tutorial",
+            "certificate_hash": "5ac4865a9dc8df2ee36f85cddad787ce5bc08e59"
+          }
+        },
+        {
+          "client_id": "404467407419-tg7fg5hnum4ugade2q65315kledq760l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgasbVFcQluE1gCexECnsi0YzYEP_zTAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404467407419-tg7fg5hnum4ugade2q65315kledq760l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

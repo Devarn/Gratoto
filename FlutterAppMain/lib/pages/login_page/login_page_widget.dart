@@ -11,6 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'login_page_model.dart';
 export 'login_page_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPageWidget extends StatefulWidget {
   const LoginPageWidget({Key? key}) : super(key: key);
@@ -21,6 +23,10 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   late LoginPageModel _model;
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
@@ -41,6 +47,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     _unfocusNode.dispose();
     super.dispose();
   }
+
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +105,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                 Align(
                   alignment: AlignmentDirectional(-0.95, 0.15),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5.0, 10.0, 0.0, 0.0),
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(5.0, 10.0, 0.0, 0.0),
                     child: Text(
-                      'User Name',
+                      'Email',
                       style: FlutterFlowTheme.of(context).bodyText1.override(
                             fontFamily: 'Poppins',
                             fontSize: 20.0,
@@ -109,7 +118,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
                   child: TextFormField(
                     controller: _model.textController1,
                     autofocus: true,
@@ -148,8 +158,16 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       fillColor: Color(0x68185F1C),
                     ),
                     style: FlutterFlowTheme.of(context).bodyText1,
-                    validator:
-                        _model.textController1Validator.asValidator(context),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return ("Please enter your Email");
+                      }
+                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                          .hasMatch(value)) {
+                        return ("Please enater a valid Email");
+                      }
+                      return null;
+                    },
                   ),
                 ),
                 Align(
@@ -167,7 +185,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
                   child: TextFormField(
                     controller: _model.textController2,
                     autofocus: true,
@@ -221,8 +240,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       ),
                     ),
                     style: FlutterFlowTheme.of(context).bodyText1,
-                    validator:
-                        _model.textController2Validator.asValidator(context),
+                    validator: (value) {
+                      RegExp regex = new RegExp(r'^.{6,}$');
+                      if (value!.isEmpty) {
+                        return ("Password is required for login");
+                      }
+                      if (!regex.hasMatch(value)) {
+                        return ("Please Enter Valid Password (Min. 6 Character)");
+                      }
+                    },
                   ),
                 ),
                 Align(
@@ -251,9 +277,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                 Align(
                   alignment: AlignmentDirectional(0.0, -0.05),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 60.0, 0.0, 0.0),
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 60.0, 0.0, 0.0),
                     child: FFButtonWidget(
                       onPressed: () async {
+                        signIn(emailController.text, passwordController.text);
+                        print(_model.textController1.text);
+                        signIn(_model.textController1.text,
+                            _model.textController2.text);
+
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -352,12 +384,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 70.0, 20.0, 0.0, 20.0),
                             child: Text(
                               'New to Gratoto ?',
-                              style:
-                                  FlutterFlowTheme.of(context).bodyText1.override(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 16.0,
-                                        fontStyle: FontStyle.italic,
-                                      ),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyText1
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16.0,
+                                    fontStyle: FontStyle.italic,
+                                  ),
                             ),
                           ),
                         ),
@@ -398,5 +431,51 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         ),
       ),
     );
+  }
+
+  // login function
+  void signIn(String email, String password) async {
+    String errorMessage;
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _auth
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((uid) => {
+                  Fluttertoast.showToast(msg: "Login Successful"),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomeWidget(),
+                    ),
+                  )
+                });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        Fluttertoast.showToast(msg: errorMessage);
+        print(error.code);
+      }
+    }
   }
 }
