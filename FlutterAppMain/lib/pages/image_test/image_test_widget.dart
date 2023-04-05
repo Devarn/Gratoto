@@ -305,6 +305,19 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
   }
 
   Future<bool> checkPermissions() async {
+    bool allCorrect = true;
+
+    var status = await Permission.camera.status;
+    if (status.isDenied) {
+      allCorrect = false;
+      Fluttertoast.showToast(msg: 'cmaera persmission is denied');
+      // Here you can open app settings so that the user can give permission
+      openAppSettings();
+    }
+    return Future.value(allCorrect);
+  }
+
+  Future<bool> checkPermission() async {
     bool isStoragePermission = true;
     bool isVideosPermission = true;
     bool isPhotosPermission = true;
@@ -313,15 +326,14 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
 // Only check for storage < Android 13
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    if (androidInfo.version.sdkInt >= 33) {
-      isVideosPermission = await Permission.videos.status.isGranted;
-      isPhotosPermission = await Permission.photos.status.isGranted;
-    } else {
-      isStoragePermission = await Permission.storage.status.isGranted;
-    }
+
+    isVideosPermission = await Permission.videos.status.isGranted;
+    isPhotosPermission = await Permission.photos.status.isGranted;
+    isStoragePermission = await Permission.storage.status.isGranted;
 
     if (isStoragePermission && isVideosPermission && isPhotosPermission) {
       allCorrect = true;
+
       // no worries about crash
     } else {
       openAppSettings();
@@ -481,22 +493,24 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             this.setState(() {
                               imageFile = File(picture.path);
                             });
-                            if (await uploadImage()) {
-                              if (await diseaseInfo()) {
-                                await _saveImage();
-                                await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoadingPagWidget(
-                                        imageFile!,
-                                        diseaseName,
-                                        fertilizer,
-                                        solution),
-                                  ),
-                                );
-                                print("started");
-                              } else
-                                imageUploadFail("db acccses failed");
+                            if (await checkPermissions()) {
+                              if (await uploadImage()) {
+                                if (await diseaseInfo()) {
+                                  await _saveImage();
+                                  await Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoadingPagWidget(
+                                          imageFile!,
+                                          diseaseName,
+                                          fertilizer,
+                                          solution),
+                                    ),
+                                  );
+                                  print("started");
+                                } else
+                                  imageUploadFail("db acccses failed");
+                              }
                             }
                           },
                           child: Container(
