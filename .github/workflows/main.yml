@@ -1,11 +1,10 @@
 on:
   pull_request:
-    branches:
-      - main
+    paths:
+      - 'FlutterAppMain/**'
   push:
     paths:
       - 'FlutterAppMain/**'
-      
 name: "Build & Release"
 jobs:
   build:
