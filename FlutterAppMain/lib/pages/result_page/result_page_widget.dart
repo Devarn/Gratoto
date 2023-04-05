@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:tutorial/home/home_widget.dart';
+
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
 import '/pages/who_we_are/who_we_are_widget.dart';
@@ -16,6 +18,7 @@ class ResultPageWidget extends StatefulWidget {
   final String fertlizer;
   final String solution;
   final File imageFile;
+
   ResultPageWidget(
       this.imageFile, this.diseaseName, this.fertlizer, this.solution,
       {Key? key})
@@ -29,6 +32,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
   late ResultPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   Future<bool> _onBackPressed() async {
     // Navigate to a specific page when the back button is pressed
     Navigator.push(
@@ -116,7 +120,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
+              padding: EdgeInsetsDirectional.fromSTEB(20.0, 40.0, 0.0, 0.0),
               child: Column(
                 children: [
                   Align(
@@ -128,7 +132,6 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                             color: Color(0xFF82878C),
                             fontWeight: FontWeight.w500,
                           ),
-
                     ),
                   ),
                   Container(
@@ -160,7 +163,7 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+              padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 0.0, 0.0),
               child: Column(
                 children: [
                   Align(
@@ -177,36 +180,23 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                   Container(
                     width: 322.2,
                     height: 117.7,
-
                     decoration: BoxDecoration(
                       color: Color(0xFF052106),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Align(
-
-                      
-
-                      
-
-                      
                       alignment: AlignmentDirectional(-0.85, -0.65),
                       child: Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
                         child: Text(
                           widget.solution,
-
-                          
                           style:
                               FlutterFlowTheme.of(context).subtitle1.override(
                                     fontFamily: 'Poppins',
                                     color: Colors.white,
                                     fontSize: 14.0,
-
-                                
                                     fontWeight: FontWeight.normal,
-
-                                
                                   ),
                         ),
                       ),
@@ -216,18 +206,13 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+              padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 0.0, 0.0),
               child: Column(
                 children: [
                   Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
-
-                      
-
-                      
                       'Fertilizer',
-
                       style: FlutterFlowTheme.of(context).bodyText1.override(
                             fontFamily: 'Poppins',
                             color: Color(0xFF82878C),
@@ -243,25 +228,12 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Align(
-
-                      
                       alignment: AlignmentDirectional(-0.85, -0.65),
-
-                      
-                     
-
-                      
                       child: Padding(
                         padding:
                             EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 0.0, 5.0),
                         child: Text(
-
-                          
-
-                          
                           widget.fertlizer,
-
-                          
                           style:
                               FlutterFlowTheme.of(context).subtitle1.override(
                                     fontFamily: 'Poppins',
@@ -273,6 +245,19 @@ class _ResultPageWidgetState extends State<ResultPageWidget> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xff5d3c2e),
+                  padding: EdgeInsets.all(10)),
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => HomeWidget()));
+              },
+              child: Text(
+                "Done",
+                style: TextStyle(fontSize: 18),
               ),
             ),
           ],
