@@ -1,3 +1,5 @@
+import 'package:google_sign_in/google_sign_in.dart';
+
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
 import '../../config/ui_util.dart';
@@ -327,7 +329,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         EdgeInsetsDirectional.fromSTEB(30.0, 40.0, 30.0, 30.0),
                     child: InkWell(
                       onTap: () async {
-                        await launchURL('https://www.google.com/');
+                        signInWithGoogle();
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -469,5 +471,23 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       Fluttertoast.showToast(msg: errorMessage);
       print(error.code);
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser =
+        await GoogleSignIn(scopes: ['email']).signIn();
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeWidget(),
+      ),
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
