@@ -15,4 +15,5 @@ class LoadingPagModel extends FlutterFlowModel {
 
   void updatePercentage(double percentage) {}
 
+  /// Additional helper methods are added here.
 }
