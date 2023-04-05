@@ -9,13 +9,13 @@ from keras.models import save_model
 
 app = FastAPI()
 
-MODEL = tf.keras.models.load_model("../model/gratato_modeg_with_wrong_inputs.h5", compile=False)
+MODEL = tf.keras.models.load_model("../model/plant disease_99.80.h5", compile=False)
 MODEL.compile
 CLASS_NAMESs = ['Grape__Black_rot', 'Grape_Esca(Black_Measles)', 'Grape__Leaf_blight(Isariopsis_Leaf_Spot)',
                 'Grape__healthy', 'Potato_Early_blight', 'Potato_Late_blight', 'Potato__healthy',
                 'Tomato__Bacterial_spot', 'Tomato_Early_blight', 'Tomato_Late_blight', 'Tomato__Leaf_Mold',
                 'Tomato__Septoria_leaf_spot', 'Tomato_Spider_mites Two-spotted_spider_mite', 'Tomato__Target_Spot',
-                'Tomato__Tomato_Yellow_Leaf_Curl_Virus', 'Tomato_Tomato_mosaic_virus', 'Tomato__healthy', 'not healthy']
+                'Tomato__Tomato_Yellow_Leaf_Curl_Virus', 'Tomato_Tomato_mosaic_virus', 'Tomato__healthy']
 
 CLASS_NAMES = ['Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust',
                'Apple___healthy', 'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew', 'Cherry_(including_sour)___healthy',
@@ -67,7 +67,7 @@ async def predict(
     img_bytes = read_file_as_image(await file.read())
     img_batch = np.expand_dims(img_bytes, 0)
     predictions = MODEL.predict(img_batch)
-    predicted_class = CLASS_NAMESs[np.argmax(predictions[0])]
+    predicted_class = CLASS_NAMES[np.argmax(predictions[0])]
     conifdence = np.max(predictions[0])
     return {
         'class': predicted_class,
