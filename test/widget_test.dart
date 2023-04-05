@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:tutorial/main.dart';
 import 'package:tutorial/pages/image_test/image_test_widget.dart' as f;
