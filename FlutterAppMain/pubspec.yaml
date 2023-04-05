@@ -23,49 +23,61 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
   flutter_localizations:
     sdk: flutter
   auto_size_text: 3.0.0
-  cached_network_image: 3.2.1
-  file_picker: 4.5.1
-  flutter_animate: 1.0.0
+  cached_network_image: ^3.2.3
+  file_picker: ^5.2.6
+  flutter_animate: ^4.1.1+1
   flutter_cache_manager: 3.3.0
-  flutter_staggered_grid_view: 0.6.2
-  font_awesome_flutter: 10.1.0
+  flutter_staggered_grid_view: ^0.4.0
+  font_awesome_flutter: ^10.4.0
   from_css_color: 2.0.0
-  google_fonts: 3.0.1
+  google_fonts: ^4.0.3
   image_picker: ^0.8.7
-  image_picker_android: 0.8.5+3
-  image_picker_for_web: 2.1.10
-  image_picker_ios: 0.8.6+1
-  image_picker_platform_interface: 2.6.2
+  image_picker_android: ^0.8.6+6
+  image_picker_for_web: ^2.1.12
+  image_picker_ios: ^0.8.7+1
+  image_picker_platform_interface: ^2.6.3
   intl: 0.17.0
-  json_path: 0.4.1
+  json_path: ^0.5.0
   mime_type: 1.0.0
-  page_transition: 2.0.4
-  percent_indicator: 4.2.2
-  plugin_platform_interface: 2.1.3
-  provider: 6.0.4
-  shared_preferences: 2.0.15
-  simple_gradient_text: 1.2.3
-  sqflite: 2.2.0+2
-  timeago: 3.2.2
-  url_launcher: 6.1.5
-  video_player: 2.4.5
-  video_player_android: 2.3.8
-  video_player_avfoundation: 2.3.5
-  video_player_platform_interface: 5.1.3
-  video_player_web: 2.0.12
+  page_transition: ^2.0.9
+  percent_indicator: ^4.2.3
+  plugin_platform_interface: ^2.1.4
+  provider: ^6.0.5
+  shared_preferences: ^2.0.20
+  simple_gradient_text: ^1.2.4
+  sqflite: ^2.2.6
+  timeago: ^3.3.0
+  url_launcher: ^6.1.10
+  video_player: ^2.6.0
+  video_player_android: ^2.4.2
+  video_player_avfoundation: ^2.4.2
+  video_player_platform_interface: ^6.1.0
+  video_player_web: ^2.0.15
+    
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
+  mongo_dart: ^0.9.1
+  flutter_js: ^0.6.0
+  fluttertoast: ^8.2.1
+  path_provider: ^2.0.14
+  flutter_local_notifications: ^8.2.0
+  connectivity: ^3.0.6
+  aes_crypt: ^0.1.1
+  permission_handler: ^10.2.0
+  device_info_plus: ^8.1.0
 
 dev_dependencies:
 
   flutter_test:
     sdk: flutter
+  test: ^1.22.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -86,6 +98,7 @@ flutter:
     - assets/audios/
     - assets/lottie_animations/
     - assets/rive_animations/
+    - assets/txtfiles/
     - assets/pdfs/
 
 

@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:tutorial/dbHelper/mongodb.dart';
 import 'config/internationalization.dart';
 import 'index.dart';
 
@@ -35,7 +37,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'tutorial',debugShowCheckedModeBanner: false,
+      title: 'Gratato',
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
