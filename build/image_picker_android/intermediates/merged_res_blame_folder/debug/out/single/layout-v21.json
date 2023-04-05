@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\ASUS\\Documents\\IIT\\sdgp\\Gratoto\\FlutterAppMain\\build\\image_picker_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\ASUS\\.gradle\\caches\\transforms-3\\2771783ef1243832d46f1da06829c594\\transformed\\core-1.9.0\\res\\layout-v21\\notification_template_icon_group.xml"
+    },
+    {
+        "merged": "C:\\Users\\ASUS\\Documents\\IIT\\sdgp\\Gratoto\\FlutterAppMain\\build\\image_picker_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\ASUS\\.gradle\\caches\\transforms-3\\2771783ef1243832d46f1da06829c594\\transformed\\core-1.9.0\\res\\layout-v21\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "C:\\Users\\ASUS\\Documents\\IIT\\sdgp\\Gratoto\\FlutterAppMain\\build\\image_picker_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action.xml",
+        "source": "C:\\Users\\ASUS\\.gradle\\caches\\transforms-3\\2771783ef1243832d46f1da06829c594\\transformed\\core-1.9.0\\res\\layout-v21\\notification_action.xml"
+    },
+    {
+        "merged": "C:\\Users\\ASUS\\Documents\\IIT\\sdgp\\Gratoto\\FlutterAppMain\\build\\image_picker_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\ASUS\\.gradle\\caches\\transforms-3\\2771783ef1243832d46f1da06829c594\\transformed\\core-1.9.0\\res\\layout-v21\\notification_action_tombstone.xml"
+    }
+]
