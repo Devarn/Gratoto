@@ -1,14 +1,19 @@
 import 'dart:io';
 //import 'dart:js_util';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_js/flutter_js.dart';
+import 'package:flutter_js/javascriptcore/flutter_jscore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tutorial/index.dart';
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
+import 'dart:typed_data';
+import 'package:aes_crypt/aes_crypt.dart';
 import '/pages/loading_pag/loading_pag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -97,7 +102,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
         //write the disease,fertlizer and solution to this file seprated by commas
         //so it can be split later and given to navigator
 
-        await file.writeAsString('$diseaseName,$fertilizer,$solution');
+        await file.writeAsString('$diseaseName:$fertilizer:$solution');
       } catch (e) {
         Fluttertoast.showToast(msg: 'unexpected error in saving files');
 
@@ -105,6 +110,22 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
       }
     }
   }
+
+//  Future<File> encrypt() async {
+  //  var crypt = AesCrypt('gratoto123');
+  //crypt.setOverwriteMode(AesCryptOwMode.on);
+  //final File mongodbtxt = File("assets/txtfiles/mongodb.txt");
+  //crypt.encryptFileSync(mongodbtxt.path);
+  //return mongodbtxt;
+  // }
+
+  //Future<File> decrt() async {
+  //var crypt = AesCrypt('gratoto123');
+  //crypt.setOverwriteMode(AesCryptOwMode.on);
+  //final File mongodbtxt = File("assets/txtfiles/mongodb.txt");
+  // crypt.encryptFileSync(mongodbtxt.path);
+  // return mongodbtxt;
+  //}
 
   Future<bool> diseaseInfo() async {
     bool dbResult = true;
@@ -283,6 +304,32 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     return network;
   }
 
+  Future<bool> checkPermissions() async {
+    bool isStoragePermission = true;
+    bool isVideosPermission = true;
+    bool isPhotosPermission = true;
+    bool allCorrect = false;
+
+// Only check for storage < Android 13
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    if (androidInfo.version.sdkInt >= 33) {
+      isVideosPermission = await Permission.videos.status.isGranted;
+      isPhotosPermission = await Permission.photos.status.isGranted;
+    } else {
+      isStoragePermission = await Permission.storage.status.isGranted;
+    }
+
+    if (isStoragePermission && isVideosPermission && isPhotosPermission) {
+      allCorrect = true;
+      // no worries about crash
+    } else {
+      openAppSettings();
+      // write your code here
+    }
+    return Future.value(allCorrect);
+  }
+
   Future<bool> uploadImage() async {
     Navigator.pop;
     // Fluttertoast.showToast(msg: 'Image is being uploaded');
@@ -423,6 +470,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             EdgeInsetsDirectional.fromSTEB(50.0, 0.0, 0.0, 20),
                         child: InkWell(
                           onTap: () async {
+                            await checkPermissions();
                             var picture = await ImagePicker()
                                 .pickImage(source: ImageSource.camera);
                             if (picture == null) {
@@ -483,6 +531,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             alignment: AlignmentDirectional(0.05, -0.25),
                             child: InkWell(
                               onTap: () async {
+                                await checkPermissions();
                                 var picture = await ImagePicker()
                                     .pickImage(source: ImageSource.gallery);
                                 if (picture == null) {

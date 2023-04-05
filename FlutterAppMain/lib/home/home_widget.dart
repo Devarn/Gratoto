@@ -61,7 +61,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     final directory = await getApplicationDocumentsDirectory();
     final textFilePath = '${directory.path}/$name.txt';
     final textContent = await File(textFilePath).readAsString();
-    final induvidualName = textContent.split(',');
+    final induvidualName = textContent.split(':');
     await Navigator.push(
         context,
         MaterialPageRoute(

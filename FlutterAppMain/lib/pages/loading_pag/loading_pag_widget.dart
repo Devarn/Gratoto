@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
@@ -14,7 +12,6 @@ import 'loading_pag_model.dart';
 export 'loading_pag_model.dart';
 
 class LoadingPagWidget extends StatefulWidget {
-
   final String diseaseName;
   final String confidence = "";
   final String fertlizer;
@@ -26,16 +23,13 @@ class LoadingPagWidget extends StatefulWidget {
       {Key? key})
       : super(key: key);
 
-
   @override
   _LoadingPagWidgetState createState() => _LoadingPagWidgetState();
 }
 
 class _LoadingPagWidgetState extends State<LoadingPagWidget> {
   late LoadingPagModel _model;
-
   double _percentage = 0.0;
-
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
@@ -44,7 +38,6 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => LoadingPagModel());
-
 
     // Call your function that updates the percentage value here
     // You can pass a boolean value to indicate the progress of your function
@@ -77,7 +70,6 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
         ),
       );
     }
-
   }
 
   @override
@@ -120,9 +112,7 @@ class _LoadingPagWidgetState extends State<LoadingPagWidget> {
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
                     child: CircularPercentIndicator(
-
                       percent: _percentage,
-
                       radius: 80.0,
                       lineWidth: 15.0,
                       animation: true,
