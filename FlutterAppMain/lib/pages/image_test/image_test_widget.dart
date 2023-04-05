@@ -75,7 +75,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
       //get t he ones that end with jpg extension
       final imageFiles =
           files.where((file) => path.extension(file.path) == '.jpg').toList();
-      //get the number of suc files in the directory
+      //get the number of such files in the directory
 
       final imageCount = imageFiles.length;
       //add one to it so the new file can be saved later as such
