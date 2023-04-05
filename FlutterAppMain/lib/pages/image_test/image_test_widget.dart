@@ -37,8 +37,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
   late String diseaseName; //name of dieases detected
   late String confidence; //confidence of ml model
 
-  late String fertilizer; //fertiizer taken
-  late String solution; //soution taken from DB
+  late String fertilizer; // fertiizer taken
+  late String solution; // soution taken from DB
   bool isLoading = false; //is the ciriclar indcator loading
 
   late File? imageFile; //the image selected
