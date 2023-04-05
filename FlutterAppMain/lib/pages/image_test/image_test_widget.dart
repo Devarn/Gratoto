@@ -358,7 +358,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
 
 //check if gallery permission is given else open settings
     var status = await Permission.photos.status;
-    if (status.isDenied) {
+    var statis = await Permission.storage.status;
+    if (status.isDenied || statis.isDenied) {
       allCorrect = false;
       Fluttertoast.showToast(msg: 'Please enable gallery permission');
       // Here you can open app settings so that the user can give permission
