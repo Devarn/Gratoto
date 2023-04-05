@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\Users\\Devarn Paraneetharan\\Documents\\GitHub\\Gratoto\\FlutterAppMain\\build\\url_launcher_android\\intermediates\\res\\merged\\debug\\drawable\\notification_bg_low.xml",
+        "source": "C:\\Users\\Devarn Paraneetharan\\.gradle\\caches\\transforms-3\\fafcfed878299485c8eee0ef2a919f59\\transformed\\core-1.6.0\\res\\drawable\\notification_bg_low.xml"
+    },
+    {
+        "merged": "C:\\Users\\Devarn Paraneetharan\\Documents\\GitHub\\Gratoto\\FlutterAppMain\\build\\url_launcher_android\\intermediates\\res\\merged\\debug\\drawable\\notification_icon_background.xml",
+        "source": "C:\\Users\\Devarn Paraneetharan\\.gradle\\caches\\transforms-3\\fafcfed878299485c8eee0ef2a919f59\\transformed\\core-1.6.0\\res\\drawable\\notification_icon_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Devarn Paraneetharan\\Documents\\GitHub\\Gratoto\\FlutterAppMain\\build\\url_launcher_android\\intermediates\\res\\merged\\debug\\drawable\\notification_bg.xml",
+        "source": "C:\\Users\\Devarn Paraneetharan\\.gradle\\caches\\transforms-3\\fafcfed878299485c8eee0ef2a919f59\\transformed\\core-1.6.0\\res\\drawable\\notification_bg.xml"
+    },
+    {
+        "merged": "C:\\Users\\Devarn Paraneetharan\\Documents\\GitHub\\Gratoto\\FlutterAppMain\\build\\url_launcher_android\\intermediates\\res\\merged\\debug\\drawable\\notification_tile_bg.xml",
+        "source": "C:\\Users\\Devarn Paraneetharan\\.gradle\\caches\\transforms-3\\fafcfed878299485c8eee0ef2a919f59\\transformed\\core-1.6.0\\res\\drawable\\notification_tile_bg.xml"
+    }
+]

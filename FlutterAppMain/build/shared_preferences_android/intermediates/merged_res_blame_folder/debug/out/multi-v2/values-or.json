@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\Devarn Paraneetharan\\Documents\\GitHub\\Gratoto\\FlutterAppMain\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\values-or\\values-or.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Devarn Paraneetharan\\.gradle\\caches\\transforms-3\\fafcfed878299485c8eee0ef2a919f59\\transformed\\core-1.6.0\\res\\values-or\\values-or.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "C:\\Users\\Devarn Paraneetharan\\Documents\\GitHub\\Gratoto\\FlutterAppMain\\build\\shared_preferences_android\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-or\\values-or.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Devarn Paraneetharan\\.gradle\\caches\\transforms-3\\fafcfed878299485c8eee0ef2a919f59\\transformed\\core-1.6.0\\res\\values-or\\values-or.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        }
+    ]
+}
