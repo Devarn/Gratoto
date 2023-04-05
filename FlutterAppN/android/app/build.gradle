@@ -13,11 +13,13 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
+    //Checks for the flutter version code
     flutterVersionCode = '1'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
+    //Checks for the flutter version name
     flutterVersionName = '1.0'
 }
 
@@ -29,12 +31,14 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
+    
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
     compileSdkVersion 33
     ndkVersion "21.3.6528147"
+    //Added new ndk
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
