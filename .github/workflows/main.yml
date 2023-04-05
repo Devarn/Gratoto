@@ -1,13 +1,16 @@
 on:
   pull_request:
-    paths:
-      - 'FlutterAppMain/**'
+    branches:
+      - main
   push:
-    paths:
-      - 'FlutterAppMain/**'
+    branches:
+      - main
+      
 name: "Build & Release"
 jobs:
   build:
+    - run: flutter pub get
+    working-directory: .'FlutterAppMain/**'
     name: Build & Release
     runs-on: ubuntu-latest
     steps:
