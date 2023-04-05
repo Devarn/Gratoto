@@ -334,25 +334,27 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Align(
-                            alignment: AlignmentDirectional(0.15, 0.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  140.0, 0.0, 140.0, 0.0),
-                              child: Container(
-                                width: 50.0,
-                                height: 50.0,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/Google-Icon-PNG.jpg',
-                                  fit: BoxFit.cover,
+                          Flexible(
+                            child: Align(
+                              alignment: AlignmentDirectional(0.10, 0.0),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    140.0, 0.0, 140.0, 0.0),
+                                child: Container(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/Google-Icon-PNG.jpg',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
