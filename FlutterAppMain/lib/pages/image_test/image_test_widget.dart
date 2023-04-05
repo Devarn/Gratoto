@@ -13,7 +13,6 @@ import 'package:tutorial/index.dart';
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
 import 'dart:typed_data';
-import 'package:aes_crypt/aes_crypt.dart';
 import '/pages/loading_pag/loading_pag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

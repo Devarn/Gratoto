@@ -71,7 +71,6 @@ dependencies:
   path_provider: ^2.0.14
   flutter_local_notifications: ^8.2.0
   connectivity: ^3.0.6
-  aes_crypt: ^0.1.1
   permission_handler: ^10.2.0
   device_info_plus: ^8.1.0
 
