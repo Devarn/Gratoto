@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
@@ -21,6 +23,8 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
+
+  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -98,7 +102,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                   alignment: AlignmentDirectional(0.0, -0.42),
                   child: Padding(
                     padding:
-                    EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
+                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
                     child: TextFormField(
                       controller: _model.textController,
                       autofocus: true,
@@ -139,7 +143,7 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                       ),
                       style: FlutterFlowTheme.of(context).bodyText1,
                       validator:
-                      _model.textControllerValidator.asValidator(context),
+                          _model.textControllerValidator.asValidator(context),
                     ),
                   ),
                 ),
@@ -149,10 +153,10 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                   child: Text(
                     'Back To Sign In',
                     style: FlutterFlowTheme.of(context).bodyText1.override(
-                      fontFamily: 'Poppins',
-                      color: Colors.black,
-                      fontStyle: FontStyle.italic,
-                    ),
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic,
+                        ),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -160,20 +164,32 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                   alignment: AlignmentDirectional(0.0, -0.01),
                   child: FFButtonWidget(
                     onPressed: () {
-                      print('Button pressed ...');
+                      if (_model.textController!.text.isEmpty) {
+                        Fluttertoast.showToast(msg: "Please Enter Your Email");
+                      }
+                      // reg expression for email validation
+                      else if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                          .hasMatch(_model.textController!.text)) {
+                        Fluttertoast.showToast(
+                            msg: "Please Enter a valid email");
+                      } else {
+                        sendRecovery(_model.textController!.text);
+                      }
                     },
                     text: 'Send',
                     options: FFButtonOptions(
                       width: 170.8,
                       height: 69.6,
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFF052106),
-                      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                        fontFamily: 'Poppins',
-                        color: Colors.white,
-                      ),
+                      textStyle:
+                          FlutterFlowTheme.of(context).subtitle2.override(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                              ),
                       borderSide: BorderSide(
                         color: Colors.transparent,
                         width: 1.0,
@@ -183,9 +199,6 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                   ),
                 ),
                 SizedBox(height: 60),
-
-
-
                 Align(
                   alignment: AlignmentDirectional(0.0, 0.27),
                   child: Text(
@@ -212,10 +225,10 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                     child: Text(
                       'Don\'t You Have An Account ?',
                       style: FlutterFlowTheme.of(context).bodyText1.override(
-                        fontFamily: 'Open Sans',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                      ),
+                            fontFamily: 'Open Sans',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                          ),
                     ),
                   ),
                 ),
@@ -235,14 +248,16 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                     options: FFButtonOptions(
                       width: 167.0,
                       height: 50.7,
-                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       iconPadding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                       color: Color(0xFF052106),
-                      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
-                          ),
+                      textStyle:
+                          FlutterFlowTheme.of(context).subtitle2.override(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                              ),
                       borderSide: BorderSide(
                         color: Colors.transparent,
                         width: 1.0,
@@ -251,13 +266,48 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                     ),
                   ),
                 ),
-
-
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void sendRecovery(String email) async {
+    String errorMessage;
+
+    try {
+      await _auth
+          .sendPasswordResetEmail(email: email)
+          .then((value) => {
+                Fluttertoast.showToast(msg: "Recovery email has been sent!"),
+              })
+          .catchError((e) {
+        Fluttertoast.showToast(msg: e!.message);
+      });
+    } on FirebaseAuthException catch (error) {
+      switch (error.code) {
+        case "invalid-email":
+          errorMessage = "Your email address appears to be malformed.";
+          break;
+        case "user-not-found":
+          errorMessage = "User with this email doesn't exist.";
+          break;
+        case "user-disabled":
+          errorMessage = "User with this email has been disabled.";
+          break;
+        case "too-many-requests":
+          errorMessage = "Too many requests";
+          break;
+        case "operation-not-allowed":
+          errorMessage = "Not allowed!";
+          break;
+        default:
+          errorMessage = "An undefined Error happened.";
+      }
+      Fluttertoast.showToast(msg: errorMessage);
+      print(error.code);
+    }
   }
 }
