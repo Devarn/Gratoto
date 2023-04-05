@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  aes_crypt_null_safe:
+    dependency: "direct main"
+    description:
+      name: aes_crypt_null_safe
+      sha256: f73e782400d54056de2cbf3cb50f680d8fc1328ce59eb9749ec94c080ea4ec0d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   analyzer:
     dependency: transitive
     description:
