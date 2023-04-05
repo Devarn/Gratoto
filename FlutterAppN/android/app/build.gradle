@@ -13,30 +13,32 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
+    //Checks for the flutter version code
     flutterVersionCode = '1'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
+    //Checks for the flutter version name
     flutterVersionName = '1.0'
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
+    
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
     compileSdkVersion 33
     ndkVersion "21.3.6528147"
-
+    //Added new ndk
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -55,6 +57,11 @@ android {
         versionName flutterVersionName
     }
 
+    configurations.all {
+    resolutionStrategy {
+      force 'com.android.tools.build:gradle:4.1.0'
+}
+}
    signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
@@ -79,6 +86,4 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:31.2.3')
-    implementation 'com.android.support:multidex:1.0.3'
 }
