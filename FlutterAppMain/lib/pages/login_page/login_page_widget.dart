@@ -23,7 +23,6 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   late LoginPageModel _model;
-  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
@@ -158,16 +157,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       fillColor: Color(0x68185F1C),
                     ),
                     style: FlutterFlowTheme.of(context).bodyText1,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return ("Please enter your Email");
-                      }
-                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                          .hasMatch(value)) {
-                        return ("Please enater a valid Email");
-                      }
-                      return null;
-                    },
+                    validator:
+                        _model.textController1Validator.asValidator(context),
                   ),
                 ),
                 Align(
@@ -188,68 +179,60 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   padding:
                       EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 20.0),
                   child: TextFormField(
-                    controller: _model.textController2,
-                    autofocus: true,
-                    obscureText: !_model.passwordVisibility,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      hintStyle: FlutterFlowTheme.of(context).bodyText2,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1.0,
+                      controller: _model.textController2,
+                      autofocus: true,
+                      obscureText: !_model.passwordVisibility,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        hintStyle: FlutterFlowTheme.of(context).bodyText2,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                        borderRadius: BorderRadius.circular(15.0),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        focusedErrorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        filled: true,
+                        fillColor: Color(0x68185F1C),
+                        suffixIcon: InkWell(
+                          onTap: () => setState(
+                            () => _model.passwordVisibility =
+                                !_model.passwordVisibility,
+                          ),
+                          focusNode: FocusNode(skipTraversal: true),
+                          child: Icon(
+                            _model.passwordVisibility
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Color(0xFF757575),
+                            size: 22.0,
+                          ),
+                        ),
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      errorBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      focusedErrorBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      filled: true,
-                      fillColor: Color(0x68185F1C),
-                      suffixIcon: InkWell(
-                        onTap: () => setState(
-                          () => _model.passwordVisibility =
-                              !_model.passwordVisibility,
-                        ),
-                        focusNode: FocusNode(skipTraversal: true),
-                        child: Icon(
-                          _model.passwordVisibility
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Color(0xFF757575),
-                          size: 22.0,
-                        ),
-                      ),
-                    ),
-                    style: FlutterFlowTheme.of(context).bodyText1,
-                    validator: (value) {
-                      RegExp regex = new RegExp(r'^.{6,}$');
-                      if (value!.isEmpty) {
-                        return ("Password is required for login");
-                      }
-                      if (!regex.hasMatch(value)) {
-                        return ("Please Enter Valid Password (Min. 6 Character)");
-                      }
-                    },
-                  ),
+                      style: FlutterFlowTheme.of(context).bodyText1,
+                      validator:
+                          _model.textController2Validator.asValidator(context)),
                 ),
                 Align(
                   alignment: AlignmentDirectional(0.8, -0.15),
@@ -281,17 +264,28 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         EdgeInsetsDirectional.fromSTEB(0.0, 60.0, 0.0, 0.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        signIn(emailController.text, passwordController.text);
-                        print(_model.textController1.text);
-                        signIn(_model.textController1.text,
-                            _model.textController2.text);
+                        RegExp regex = new RegExp(r'^.{6,}$');
 
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeWidget(),
-                          ),
-                        );
+                        if (_model.textController1.text.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: "Please enter your Email");
+                        } else if (!RegExp(
+                                "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                            .hasMatch(_model.textController1.text)) {
+                          Fluttertoast.showToast(
+                              msg: "Please enater a valid Email");
+                        } else if (_model.textController2.text.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: "Password is required for login");
+                        } else if (!regex
+                            .hasMatch(_model.textController2.text)) {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "Please Enter Valid Password (Min. 6 Character)");
+                        } else {
+                          signIn(_model.textController1.text,
+                              _model.textController2.text);
+                        }
                       },
                       text: 'Login',
                       options: FFButtonOptions(
@@ -436,46 +430,44 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   // login function
   void signIn(String email, String password) async {
     String errorMessage;
-    if (_formKey.currentState!.validate()) {
-      try {
-        await _auth
-            .signInWithEmailAndPassword(email: email, password: password)
-            .then((uid) => {
-                  Fluttertoast.showToast(msg: "Login Successful"),
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeWidget(),
-                    ),
-                  )
-                });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
+    try {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) => {
+                Fluttertoast.showToast(msg: "Login Successful"),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeWidget(),
+                  ),
+                )
+              });
+    } on FirebaseAuthException catch (error) {
+      switch (error.code) {
+        case "invalid-email":
+          errorMessage = "Your email address appears to be malformed.";
 
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMessage);
-        print(error.code);
+          break;
+        case "wrong-password":
+          errorMessage = "Your password is wrong.";
+          break;
+        case "user-not-found":
+          errorMessage = "User with this email doesn't exist.";
+          break;
+        case "user-disabled":
+          errorMessage = "User with this email has been disabled.";
+          break;
+        case "too-many-requests":
+          errorMessage = "Too many requests";
+          break;
+        case "operation-not-allowed":
+          errorMessage = "Signing in with Email and Password is not enabled.";
+          break;
+        default:
+          errorMessage = "An undefined Error happened.";
       }
+      Fluttertoast.showToast(msg: errorMessage);
+      print(error.code);
     }
   }
 }
