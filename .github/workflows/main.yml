@@ -19,12 +19,11 @@ jobs:
       - run: cd FlutterAppMain && flutter pub get
       - name: Analyze Dart
         uses: zgosalvez/github-actions-analyze-dart@v1
-        working-directory: FlutterAppMain
       - run: flutter build apk --debug --split-per-abi --no-sound-null-safety
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "FlutterAppMain/build/app/outputs/apk/debug/*"
+          artifacts: "build/app/outputs/apk/debug/*"
           tag: v1.0.${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
