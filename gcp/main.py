@@ -10,23 +10,11 @@ output_idx = None
 
 BUCKET_NAME = "gratato-model"
 
-diseases_names = ['Grape__Black_rot',
-                  'Grape_Esca(Black_Measles)',
-                  'Grape__Leaf_blight(Isariopsis_Leaf_Spot)',
-                  'Grape__healthy',
-                  'Potato_Early_blight',
-                  'Potato_Late_blight',
-                  'Potato__healthy',
-                  'Tomato__Bacterial_spot',
-                  'Tomato_Early_blight',
-                  'Tomato_Late_blight',
-                  'Tomato__Leaf_Mold',
-                  'Tomato__Septoria_leaf_spot',
-                  'Tomato_Spider_mites Two-spotted_spider_mite',
-                  'Tomato__Target_Spot',
-                  'Tomato__Tomato_Yellow_Leaf_Curl_Virus',
-                  'Tomato_Tomato_mosaic_virus',
-                  'Tomato__healthy']
+diseases_names = ['Grape Black rot', 'Grape Esca(Black Measles)', 'Grape Leaf blight(Isariopsis Leaf Spot)',
+                  'Grape healthy', 'Potato Early blight', 'Potato Late blight', 'Potato healthy',
+                  'Tomato Bacterial spot', 'Tomato Early blight', 'Tomato Late blight', 'Tomato Leaf Mold',
+                  'Tomato Septoria leaf spot', 'Tomato Two spotted spider mite', 'Tomato Target Spot',
+                  'Tomato Tomato Yellow Leaf Curl Virus', 'Tomato Tomato mosaic virus', 'Tomato healthy', 'not_plant']
 
 
 def download_blob(bucket, source_blob, download_location):
@@ -51,7 +39,6 @@ def predict(request):
         Image.open(image).convert("RGB").resize((256, 256))
     )
 
-    image = image / 255
 
     img_array = np.expand_dims(image, 0)
     predictions = model.predict(img_array)
@@ -60,5 +47,6 @@ def predict(request):
 
     predicted_class = diseases_names[np.argmax(predictions[0])]
     confidence = round(100 * (np.max(predictions[0])), 2)
+    result=predicted_class+","+str(confidence)
 
-    return {"class": predicted_class, "confidence": confidence}
+    return result

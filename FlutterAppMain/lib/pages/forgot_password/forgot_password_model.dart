@@ -9,6 +9,8 @@ class ForgotPasswordModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   // State field(s) for TextField widget.
+    // State field(s) for TextField widget.
+
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
 
@@ -20,6 +22,7 @@ class ForgotPasswordModel extends FlutterFlowModel {
     textController?.dispose();
   }
 
+  /// Additional helper methods are added here.
   /// Additional helper methods are added here.
 
 }

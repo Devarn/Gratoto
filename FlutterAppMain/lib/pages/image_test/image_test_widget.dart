@@ -1,14 +1,22 @@
 import 'dart:io';
 //import 'dart:js_util';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_js/flutter_js.dart';
+import 'package:flutter_js/javascriptcore/flutter_jscore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:path_provider/path_provider.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tutorial/index.dart';
 import '../../config/ui_model.dart';
 import '../../config/ui_theme.dart';
+import 'dart:typed_data';
+export 'image_test_widget.dart';
+import 'package:aes_crypt_null_safe/aes_crypt_null_safe.dart';
 import '/pages/loading_pag/loading_pag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -57,7 +65,8 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     super.dispose();
   }
 
-  Future<String> _getNewImageFileName() async {
+  //flu
+  Future<String> getNewImageFileName() async {
     try {
 //get the direcotry where this app stores its documents
       final directory = await getApplicationDocumentsDirectory();
@@ -66,7 +75,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
       //get t he ones that end with jpg extension
       final imageFiles =
           files.where((file) => path.extension(file.path) == '.jpg').toList();
-      //get the number of suc files in the directory
+      //get the number of such files in the directory
 
       final imageCount = imageFiles.length;
       //add one to it so the new file can be saved later as such
@@ -77,14 +86,14 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     }
   }
 
-  Future<void> _saveImage() async {
+  Future<void> saveImage() async {
     if (imageFile != null) {
       //check if image file is null or not
       try {
         //get the app document directroy
         final appDir = await getApplicationDocumentsDirectory();
 //call funtion to get the new file name
-        final newFileName = await _getNewImageFileName();
+        final newFileName = await getNewImageFileName();
         //save image as the new file name
         final savedImage =
             await imageFile!.copy('${appDir.path}/$newFileName.jpg');
@@ -97,13 +106,58 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
         //write the disease,fertlizer and solution to this file seprated by commas
         //so it can be split later and given to navigator
 
-        await file.writeAsString('$diseaseName,$fertilizer,$solution');
+        await file.writeAsString('$diseaseName:$fertilizer:$solution');
       } catch (e) {
         Fluttertoast.showToast(msg: 'unexpected error in saving files');
 
         print(e);
       }
+    } else {
+      Fluttertoast.showToast(msg: 'an image hasnt been selected');
     }
+  }
+
+  Future<File> encrypt() async {
+    var crypt = AesCrypt('gratoto');
+    crypt.setOverwriteMode(AesCryptOwMode.on);
+
+    // Get the directory for the application documents
+    final directory = await getApplicationDocumentsDirectory();
+
+    // Get the asset bundle for the app
+    final assetBundle = await rootBundle;
+
+    // Read the contents of the file from the asset bundle
+    final fileData = await assetBundle.load('assets/txtfiles/mongodb.txt');
+    final bytes = fileData.buffer.asUint8List();
+
+    // Write the contents of the file to a file in the documents directory
+    final inputFile = File('${directory.path}/mongodb.txt');
+    await inputFile.writeAsBytes(bytes);
+    print(await inputFile.readAsString());
+
+    // Encrypt the input file and overwrite it
+    print("till here okay");
+    crypt.encryptFileSync(inputFile.path);
+
+    //print(await File('${directory.path}/mongodb.txt.aes').readAsString());
+    print("dd");
+    final encryptedFile = File('${directory.path}/mongodb.txt.aes');
+    return File('${directory.path}/mongodb.txt.aes');
+  }
+
+  Future<String> decrypt() async {
+    var crypt = AesCrypt('gratoto');
+    crypt.setOverwriteMode(AesCryptOwMode.on);
+
+    final File mongodbtxt = await encrypt();
+
+    print("hr");
+    crypt.decryptFileSync(mongodbtxt.path);
+    final directory = await getApplicationDocumentsDirectory();
+    print(File('${directory.path}/mongodb.txt').readAsString());
+
+    return File('${directory.path}/mongodb.txt').readAsString();
   }
 
   Future<bool> diseaseInfo() async {
@@ -111,9 +165,9 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
 //call the circular indicator function with a value of 70 percent
     showLoadingDialog(context, "Connecting to database!", 70, true);
 //create connection with our dieases database
-    var db = await mongo.Db.create(
-            "mongodb+srv://devarn:devarngratoto@cluster0.klypayl.mongodb.net/diseasesDB?retryWrites=true&w=majority")
-        .then((value) {
+    //var dbj = await mongo.Db.create(
+    //     "mongodb+srv://devarn:devarngratoto@cluster0.klypayl.mongodb.net/diseasesDB?retryWrites=true&w=majority")
+    var db = await mongo.Db.create(await decrypt()).then((value) {
       print('Connected to MongoDB Atlas successfully.'); //to check in debug
 //update the progrees to 80
       showLoadingDialog(
@@ -212,6 +266,7 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     late Color colorBarrier;
     if (transparent) {
       colorBarrier = Colors.transparent;
+      Navigator.pop;
     } else {
       colorBarrier = Color(0x8A000000);
     }
@@ -282,9 +337,39 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
     }
     return network;
   }
+//done to see if th user has given the nescary perimissions
+
+  Future<bool> checkPermissionCamera() async {
+    bool allCorrect = true;
+//check if camera permission is given else open settings
+    var status = await Permission.camera.status;
+    if (status.isDenied) {
+      allCorrect = false;
+      Fluttertoast.showToast(msg: 'Please enable camera permission');
+      // Here you can open app settings so that the user can give permission
+      openAppSettings();
+    }
+    return Future.value(allCorrect);
+  }
+
+//done to see if th user has given the nescary perimissions
+  Future<bool> checkPermissionGallery() async {
+    bool allCorrect = true;
+
+//check if gallery permission is given else open settings
+ //   var status = await Permission.photos.status;
+   // var statis = await Permission.storage.status;
+    //if (status.isDenied || statis.isDenied) {
+      //allCorrect = false;
+      //Fluttertoast.showToast(msg: 'Please enable gallery permission');
+      // Here you can open app settings so that the user can give permission
+      //openAppSettings();
+    //}
+    return Future.value(allCorrect);
+  }
 
   Future<bool> uploadImage() async {
-    Navigator.pop;
+    // Navigator.pop;
     // Fluttertoast.showToast(msg: 'Image is being uploaded');
 
     //make uri object with our cloud predict funtion url
@@ -423,32 +508,35 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             EdgeInsetsDirectional.fromSTEB(50.0, 0.0, 0.0, 20),
                         child: InkWell(
                           onTap: () async {
-                            var picture = await ImagePicker()
-                                .pickImage(source: ImageSource.camera);
-                            if (picture == null) {
-                              Fluttertoast.showToast(
-                                  msg: 'Image selection cancelled');
-                              return;
-                            }
-                            this.setState(() {
-                              imageFile = File(picture.path);
-                            });
-                            if (await uploadImage()) {
-                              if (await diseaseInfo()) {
-                                await _saveImage();
-                                await Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoadingPagWidget(
-                                        imageFile!,
-                                        diseaseName,
-                                        fertilizer,
-                                        solution),
-                                  ),
-                                );
-                                print("started");
-                              } else
-                                imageUploadFail("db acccses failed");
+                            if (await checkPermissionCamera()) {
+                              var picture = await ImagePicker()
+                                  .pickImage(source: ImageSource.camera);
+                              if (picture == null) {
+                                Fluttertoast.showToast(
+                                    msg: 'Image selection cancelled');
+                                return;
+                              }
+                              this.setState(() {
+                                imageFile = File(picture.path);
+                              });
+
+                              if (await uploadImage()) {
+                                if (await diseaseInfo()) {
+                                  await saveImage();
+                                  await Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ResultPageWidget(
+                                          imageFile!,
+                                          diseaseName,
+                                          fertilizer,
+                                          solution),
+                                    ),
+                                  );
+                                  print("started");
+                                } else
+                                  imageUploadFail("db acccses failed");
+                              }
                             }
                           },
                           child: Container(
@@ -483,44 +571,52 @@ class _ImageTestWidgetState extends State<ImageTestWidget> {
                             alignment: AlignmentDirectional(0.05, -0.25),
                             child: InkWell(
                               onTap: () async {
-                                var picture = await ImagePicker()
-                                    .pickImage(source: ImageSource.gallery);
-                                if (picture == null) {
-                                  Fluttertoast.showToast(
-                                      msg: 'Image selection cancelled');
-                                  return;
-                                }
-
-                                this.setState(() {
-                                  imageFile = File(picture.path);
-                                });
-                                await Future.delayed(
-                                    Duration(milliseconds: 1000));
-
-                                try {
-                                  if (await uploadImage()) {
-                                    if (await diseaseInfo()) {
-                                      await _saveImage();
-
-                                      await Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ResultPageWidget(
-                                                  imageFile!,
-                                                  diseaseName,
-                                                  fertilizer,
-                                                  solution),
-                                        ),
-                                      );
-                                      print("started");
-                                    } else
-                                      imageUploadFail("db acccess failed");
+                                if (await checkPermissionGallery()) {
+                                  //check if permissions are granted
+                                  var picture = await ImagePicker().pickImage(
+                                      source: ImageSource
+                                          .gallery); //use the gallery image picker
+                                  if (picture == null) {
+                                    Fluttertoast.showToast(
+                                        //if operation is cancleed
+                                        msg: 'Image selection cancelled');
+                                    return;
                                   }
-                                } on SocketException catch (e) {
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          'Network error.Please check your network');
+
+                                  this.setState(() {
+                                    imageFile = File(picture.path);
+                                  });
+                                  await Future.delayed(
+                                      Duration(milliseconds: 1000));
+
+                                  try {
+                                    if (await uploadImage()) {
+                                      //try upload image function
+                                      if (await diseaseInfo()) {
+                                        //try
+                                        await saveImage();
+
+                                        await Navigator.pushReplacement(
+                                          //go to next page
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ResultPageWidget(
+                                                    imageFile!,
+                                                    diseaseName,
+                                                    fertilizer,
+                                                    solution),
+                                          ),
+                                        );
+                                        print("started");
+                                      } else
+                                        imageUploadFail("db acccess failed");
+                                    }
+                                  } on SocketException catch (e) {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            'Network error.Please check your network');
+                                  }
                                 }
                               },
                               child: Icon(

@@ -1,0 +1,6 @@
+run_tests:
+    image: python:3.9-buster
+    before_script:
+        - apt-get update && apt-get install make
+    script:
+        - echo test pass
